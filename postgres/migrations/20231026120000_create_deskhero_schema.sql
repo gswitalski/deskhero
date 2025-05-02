@@ -7,7 +7,7 @@
 -- table: users
 -- creates users table with columns id, username, name and password with unique constraint on username
 create table users (
-    id serial primary key,  -- primary key auto increment
+    id bigserial primary key,  -- primary key auto increment
     username varchar(50) not null unique,  -- unique username for each user
     name varchar(100) not null,  -- full name of the user
     password varchar(255) not null  -- hashed password stored
@@ -17,7 +17,7 @@ create table users (
 -- creates desk table with columns id, room_name and desk_number
 -- applies a unique constraint on (room_name, desk_number) to ensure no duplicate desk assignment in a room
 create table desk (
-    id serial primary key,
+    id bigserial primary key,
     room_name varchar(100) not null,
     desk_number varchar(100) not null,
     unique (room_name, desk_number)
@@ -27,9 +27,9 @@ create table desk (
 -- creates reservation table for tracking desk reservations by users
 -- enforces that a desk can only be reserved once per day using a unique constraint on (desk_id, reservation_date)
 create table reservation (
-    id serial primary key,
-    user_id integer not null references users(id) on delete cascade,
-    desk_id integer not null references desk(id) on delete cascade,
+    id bigserial primary key,
+    user_id bigint not null references users(id) on delete cascade,
+    desk_id bigint not null references desk(id) on delete cascade,
     reservation_date date not null,
     status varchar(10) not null check (status in ('active','cancelled')),
     unique (desk_id, reservation_date)
@@ -56,26 +56,26 @@ alter table reservation enable row level security;
 create policy reservation_select_authenticated on reservation
     for select
     to authenticated
-    using (user_id = current_setting('app.current_user_id', true)::integer);
+    using (user_id = current_setting('app.current_user_id', true)::bigint);
 
 -- policy for insert operation for authenticated users; check ensures that user_id matches current session
 create policy reservation_insert_authenticated on reservation
     for insert
     to authenticated
-    with check (user_id = current_setting('app.current_user_id', true)::integer);
+    with check (user_id = current_setting('app.current_user_id', true)::bigint);
 
 -- policy for update operation for authenticated users; using clause restricts which rows can be updated and with check ensures new values comply
 create policy reservation_update_authenticated on reservation
     for update
     to authenticated
-    using (user_id = current_setting('app.current_user_id', true)::integer)
-    with check (user_id = current_setting('app.current_user_id', true)::integer);
+    using (user_id = current_setting('app.current_user_id', true)::bigint)
+    with check (user_id = current_setting('app.current_user_id', true)::bigint);
 
 -- policy for delete operation for authenticated users; ensures users can only delete their own reservations
 create policy reservation_delete_authenticated on reservation
     for delete
     to authenticated
-    using (user_id = current_setting('app.current_user_id', true)::integer);
+    using (user_id = current_setting('app.current_user_id', true)::bigint);
 
 -- create granular row level security policies for reservation table for admin users
 -- policy for select operation for admin users; admin users have access to all reservations

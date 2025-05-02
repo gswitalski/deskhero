@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+- Model classes place in pl.grsw.deskhero.model package
+- For model classes use jakarta  annotation (importantL use 'jakarta'!!!)
+- For model classes or id filed use @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+- For model classes use annotations: @NoArgsConstructor @AllArgsConstructor @Getter @Setter
+
+

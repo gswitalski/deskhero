@@ -1,8 +1,9 @@
 ---
 description: 
-globs: *.java
+globs: 
 alwaysApply: false
 ---
+
 ## BACKEND
 
 ### Guidelines for JAVA
