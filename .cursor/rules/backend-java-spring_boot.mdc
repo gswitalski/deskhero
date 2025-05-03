@@ -25,4 +25,54 @@ alwaysApply: false
 - Use `Optional` to avoid `NullPointerException`
 
 
+## BACKEND – Java & Spring Boot (with Gradle)
 
+### Configuration & Build
+- Use **Spring Boot starters** and auto-configuration for rapid setup.
+- Manage dependencies and build with **Gradle** (`build.gradle.kts`), applying the `org.springframework.boot` and `io.spring.dependency-management` plugins.
+- Keep environment-specific values out of code: use `application.properties` / `application.yml` and **@ConfigurationProperties** for type-safe config.
+
+### Dependency Injection & IoC
+- Prefer **constructor injection** over field injection (`@Autowired`), making your beans easier to test and reason about.
+- Let Spring’s IoC container wire it all up—no `new` operator in your services!
+
+### REST Layer & DTOs
+- Controllers (`@RestController`) handle only routing and I/O mapping—offload business logic to `@Service` classes.
+- Model your input/output as immutable **`record`** DTOs.
+- Validate request bodies with Bean Validation annotations (e.g. `@NotNull`, `@Size`, `@Email`) and annotate with **`@Valid`**.
+
+### Error Handling
+- Create custom exceptions for domain-specific errors.
+- Centralize error handling in a **`@ControllerAdvice`**, returning a consistent **Error DTO** (e.g. `{ timestamp, code, message, details }`).
+
+### Naming & Style
+- **PascalCase** for class names (e.g. `OrderService`), **camelCase** for methods and fields (e.g. `calculateTotal`).
+- **ALL_CAPS** for constants (e.g. `MAX_PAGE_SIZE`).
+- Use **SLF4J** (with Logback) for logging—ditch those `System.out.println` calls.
+
+### Testing
+- **Unit tests** with JUnit 5 + Mockito / MockMvc.
+- **Integration tests** with `@SpringBootTest`.
+- **Repository tests** with `@DataJpaTest`.
+
+### Performance & Asynchronicity
+- Cache expensive calls using **Spring Cache**.
+- Offload long-running tasks with **`@Async`** (configure a proper `TaskExecutor`).
+
+### Security
+- Secure your APIs with **Spring Security**.
+- Hash passwords with **BCryptPasswordEncoder**.
+- Configure **CORS** only for the origins that need it.
+
+### Database & Migrations
+- Use **Spring Data JPA** for CRUD and query methods; watch your indexes and relationships.
+- Manage schema changes with **Flyway** or **Liquibase**.
+
+### Monitoring & Documentation
+- Expose metrics and health checks via **Spring Boot Actuator**.
+- Document your endpoints with **Springdoc OpenAPI** (Swagger UI).
+
+### Golden Rules
+- Apply **SOLID** principles: low coupling, high cohesion.
+- If a well-known library exists, use it—don’t reinvent the wheel.
+- Favor **Streams & lambdas** over old-school loops where it makes sense.
