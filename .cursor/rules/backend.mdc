@@ -1,0 +1,107 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+
+## BACKEND
+
+### Guidelines for JAVA
+
+#### LOMBOK
+
+- Use Lombok where it clearly simplifies the code
+- Use constructor injection with `@RequiredArgsConstructor`
+- Prefer Java `record` over Lombok’s `@Value` when applicable
+- Avoid using `@Data` in non-DTO classes, instead, use specific annotations like `@Getter`, `@Setter`, and `@ToString`
+- Apply Lombok annotations to fields rather than the class if only some fields require them
+- Use Lombok’s `@Slf4j` to generate loggers
+
+#### SPRING_BOOT
+
+- Use Spring Boot for simplified configuration and rapid development with sensible defaults
+- Prefer constructor-based dependency injection over `@Autowired`
+- Avoid hardcoding values that may change externally, use configuration parameters instead
+- For complex logic, use Spring profiles and configuration parameters to control which beans are injected instead of hardcoded conditionals
+- If a well-known library simplifies the solution, suggest using it instead of generating a custom implementation
+- Use DTOs as immutable `record` types
+- Use Bean Validation annotations (e.g., `@Size`, `@Email`, etc.) instead of manual validation logic
+- Use `@Valid` on request parameters annotated with `@RequestBody`
+- Use custom exceptions for business-related scenarios
+- Centralize exception handling with `@ControllerAdvice` and return a consistent error DTO: `{{error_dto}}`
+- REST controllers should handle only routing and I/O mapping, not business logic
+- Use SLF4J for logging instead of `System.out.println`
+- Prefer using lambdas and streams over imperative loops and conditionals where appropriate
+- Use `Optional` to avoid `NullPointerException`
+
+
+## BACKEND – Java & Spring Boot (with Gradle)
+
+### Configuration & Build
+- Use **Spring Boot starters** and auto-configuration for rapid setup.
+- Manage dependencies and build with **Gradle** (`build.gradle.kts`), applying the `org.springframework.boot` and `io.spring.dependency-management` plugins.
+- Keep environment-specific values out of code: use `application.properties` / `application.yml` and **@ConfigurationProperties** for type-safe config.
+
+### Dependency Injection & IoC
+- Prefer **constructor injection** over field injection (`@Autowired`), making your beans easier to test and reason about.
+- Let Spring’s IoC container wire it all up—no `new` operator in your services!
+
+### REST Layer & DTOs
+- Controllers (`@RestController`) handle only routing and I/O mapping—offload business logic to `@Service` classes.
+- Model your input/output as immutable **`record`** DTOs.
+- Validate request bodies with Bean Validation annotations (e.g. `@NotNull`, `@Size`, `@Email`) and annotate with **`@Valid`**.
+
+### Error Handling
+- Create custom exceptions for domain-specific errors.
+- Centralize error handling in a **`@ControllerAdvice`**, returning a consistent **Error DTO** (e.g. `{ timestamp, code, message, details }`).
+
+### Naming & Style
+- **PascalCase** for class names (e.g. `OrderService`), **camelCase** for methods and fields (e.g. `calculateTotal`).
+- **ALL_CAPS** for constants (e.g. `MAX_PAGE_SIZE`).
+- Use **SLF4J** (with Logback) for logging—ditch those `System.out.println` calls.
+
+### Testing
+- **Unit tests** with JUnit 5 + Mockito / MockMvc.
+- **Integration tests** with `@SpringBootTest`.
+- **Repository tests** with `@DataJpaTest`.
+
+### Performance & Asynchronicity
+- Cache expensive calls using **Spring Cache**.
+- Offload long-running tasks with **`@Async`** (configure a proper `TaskExecutor`).
+
+### Security
+- Secure your APIs with **Spring Security**.
+- Hash passwords with **BCryptPasswordEncoder**.
+- Configure **CORS** only for the origins that need it.
+
+### Database & Migrations
+- Use **Spring Data JPA** for CRUD and query methods; watch your indexes and relationships.
+- Manage schema changes with **Flyway** or **Liquibase**.
+
+### Monitoring & Documentation
+- Expose metrics and health checks via **Spring Boot Actuator**.
+- Document your endpoints with **Springdoc OpenAPI** (Swagger UI).
+
+### Golden Rules
+- Apply **SOLID** principles: low coupling, high cohesion.
+- If a well-known library exists, use it—don’t reinvent the wheel.
+- Favor **Streams & lambdas** over old-school loops where it makes sense.
+
+#### SPRING_DATA_JPA
+
+- Define repositories as interfaces extending `JpaRepository` or `CrudRepository`
+- Never expose JPA entities in API responses – always map them to DTOs
+- Use `@Transactional` at the service layer for state-changing methods, and keep transactions as short as possible
+- Use `@Transactional(readOnly = true)` for read-only operations
+- Use `@EntityGraph` or fetch joins to avoid the N+1 select problem
+- Use `@Query` for complex queries
+- Use projections (DTOs) in multi-join queries with `@Query`
+- Use Specifications for dynamic filtering
+- Use pagination when working with large datasets
+- Use `@Version` for optimistic locking in concurrent updates
+- Avoid `CascadeType.REMOVE` on large entity relationships
+- Use HikariCP for efficient connection pooling
+
+
+
+

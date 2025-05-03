@@ -1,17 +1,8 @@
 package pl.grsw.deskhero.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import pl.grsw.deskhero.model.User;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class UserDto {
-    private Long id;
-    private String username;
-    private String name;
+public record UserDto(Long id, String username, String name) {
 
     /**
      * Tworzy obiekt UserDto na podstawie obiektu modelu User.
