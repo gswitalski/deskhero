@@ -1,7 +1,7 @@
 # Plan implementacji widoku RegisterPage
 
 ## 1. Przegląd
-Widok **RegisterPage** umożliwia nowym użytkownikom rejestrację w systemie DeskHero poprzez podanie adresu email, imienia oraz hasła. Po pomyślnej rejestracji użytkownik otrzymuje JWT-token ważny przez 24 godziny i zostaje automatycznie zalogowany lub przekierowany do widoku logowania.
+Widok **RegisterPage** umożliwia nowym użytkownikom rejestrację w systemie DeskHero poprzez podanie adresu email, imienia oraz hasła. Po pomyślnej rejestracji użytkownik otrzymuje JWT-token ważny przez 24 godziny i zostaje automatycznie zalogowany i przekierowany do strony głownej (home).
 
 ## 2. Routing widoku
 - Ścieżka: `/register`
