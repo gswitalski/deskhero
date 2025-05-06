@@ -24,6 +24,16 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     boolean existsByDeskIdAndReservationDate(Long deskId, LocalDate reservationDate);
 
     /**
+     * Sprawdza, czy istnieje aktywna rezerwacja dla danego biurka w określonym dniu.
+     *
+     * @param deskId ID biurka.
+     * @param reservationDate Data rezerwacji.
+     * @param status Status rezerwacji (np. "active").
+     * @return true, jeśli aktywna rezerwacja istnieje, false w przeciwnym razie.
+     */
+    boolean existsByDeskIdAndReservationDateAndStatus(Long deskId, LocalDate reservationDate, String status);
+
+    /**
      * Znajduje wszystkie rezerwacje dla danego użytkownika.
      *
      * @param userId ID użytkownika.
