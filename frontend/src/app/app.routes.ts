@@ -16,6 +16,11 @@ export const routes: Routes = [
     title: 'DeskHero - Rezerwacja biurek'
   },
   {
+    path: 'register',
+    loadComponent: () => import('./pages/register/register-page.component').then(c => c.RegisterPageComponent),
+    title: 'DeskHero - Rejestracja'
+  },
+  {
     path: '**',
     redirectTo: ''
   }

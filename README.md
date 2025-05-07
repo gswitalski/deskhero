@@ -56,6 +56,30 @@ To run DeskHero on your local machine, follow these steps:
    ```
    The backend service will start on the default port (typically 8080). Adjust the configuration as needed.
 
+### Environment Variables
+Before running the backend, make sure to set the following environment variables:
+
+- DESKHERO_DB_URL: Database URL, e.g. `jdbc:postgresql://db.example.com:5432/deskhero`
+- DESKHERO_DB_USERNAME: Database username, e.g. `deskhero_user`
+- DESKHERO_DB_PASSWORD: Database password, e.g. `S3cureP@ssw0rd`
+- DESKHERO_APP_JWT_SECRET: JWT secret used for signing tokens, e.g. `my-very-secret-key`
+
+**Example for PowerShell (Windows):**
+```powershell
+$Env:DESKHERO_DB_URL="jdbc:postgresql://db.example.com:5432/deskhero"
+$Env:DESKHERO_DB_USERNAME="deskhero_user"
+$Env:DESKHERO_DB_PASSWORD="S3cureP@ssw0rd"
+$Env:DESKHERO_APP_JWT_SECRET="my-very-secret-key"
+```
+
+**Example for Bash (Linux/Mac):**
+```bash
+export DESKHERO_DB_URL="jdbc:postgresql://db.example.com:5432/deskhero"
+export DESKHERO_DB_USERNAME="deskhero_user"
+export DESKHERO_DB_PASSWORD="S3cureP@ssw0rd"
+export DESKHERO_APP_JWT_SECRET="my-very-secret-key"
+```
+
 ## Available Scripts
 
 ### Frontend (in `package.json`):

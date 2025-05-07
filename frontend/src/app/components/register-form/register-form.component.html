@@ -1,0 +1,60 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <div class="form-field-container">
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="username" autocomplete="email">
+
+      @if (form.get('username')?.hasError('required') && form.get('username')?.touched) {
+        <mat-error>Email jest wymagany</mat-error>
+      }
+
+      @if (form.get('username')?.hasError('email') && !form.get('username')?.hasError('required')) {
+        <mat-error>Podaj prawidłowy adres email</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Imię</mat-label>
+      <input matInput type="text" formControlName="name" autocomplete="name">
+
+      @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+        <mat-error>Imię jest wymagane</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Hasło</mat-label>
+      <input matInput type="password" formControlName="password" autocomplete="new-password">
+
+      @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
+        <mat-error>Hasło jest wymagane</mat-error>
+      }
+
+      @if (form.get('password')?.hasError('minlength') && !form.get('password')?.hasError('required')) {
+        <mat-error>Hasło musi mieć co najmniej 8 znaków</mat-error>
+      }
+    </mat-form-field>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <div class="submit-container">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="form.invalid || isLoading()"
+      class="submit-button">
+
+      @if (isLoading()) {
+        <mat-spinner diameter="24" color="accent"></mat-spinner>
+      } @else {
+        Zarejestruj się
+      }
+    </button>
+  </div>
+</form>

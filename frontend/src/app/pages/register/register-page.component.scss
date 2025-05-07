@@ -1,0 +1,23 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 64px); // Odjęcie wysokości NavBar
+  padding: 16px;
+  background-color: #f5f5f5;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 16px;
+
+  mat-card-title {
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+
+  mat-card-content {
+    padding-top: 16px;
+  }
+}
