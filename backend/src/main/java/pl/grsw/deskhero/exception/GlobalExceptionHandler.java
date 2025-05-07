@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -66,6 +67,34 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
         return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+    }
+
+    // Handler dla wyjątku BadCredentialsException (nieudane logowanie)
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorDto> handleBadCredentialsException(BadCredentialsException ex, HttpServletRequest request) {
+        log.warn("Authentication failure for request {}: {}", request.getRequestURI(), ex.getMessage());
+        ErrorDto errorDto = new ErrorDto(
+                LocalDateTime.now(),
+                HttpStatus.UNAUTHORIZED.value(),
+                HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                "Nieprawidłowa nazwa użytkownika lub hasło",
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(errorDto, HttpStatus.UNAUTHORIZED);
+    }
+
+    // Handler dla wyjątku JwtAuthenticationException
+    @ExceptionHandler(JwtAuthenticationException.class)
+    public ResponseEntity<ErrorDto> handleJwtAuthenticationException(JwtAuthenticationException ex, HttpServletRequest request) {
+        log.warn("JWT authentication failure for request {}: {}", request.getRequestURI(), ex.getMessage());
+        ErrorDto errorDto = new ErrorDto(
+                LocalDateTime.now(),
+                HttpStatus.UNAUTHORIZED.value(),
+                HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(errorDto, HttpStatus.UNAUTHORIZED);
     }
 
     // Handler dla wyjątku UserAlreadyExistsException

@@ -1,12 +1,11 @@
 package pl.grsw.deskhero.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.grsw.deskhero.dto.UserDto;
-import pl.grsw.deskhero.dto.UserRegisterRequestDto;
-import pl.grsw.deskhero.dto.UserRegisterResponseDto;
+import pl.grsw.deskhero.dto.*;
 import pl.grsw.deskhero.exception.UserAlreadyExistsException;
 import pl.grsw.deskhero.model.User;
 import pl.grsw.deskhero.repository.UserRepository;
@@ -47,5 +46,24 @@ public class UserServiceImpl implements UserService {
         UserDto userDto = UserDto.fromModel(savedUser);
 
         return new UserRegisterResponseDto("User registered successfully", userDto, token);
+    }
+    
+    @Override
+    @Transactional(readOnly = true) // Operacja tylko do odczytu
+    public UserLoginResponseDto authenticate(UserLoginRequestDto requestDto) {
+        // 1. Znajdź użytkownika po nazwie użytkownika (email)
+        User user = userRepository.findByUsername(requestDto.getUsername())
+                .orElseThrow(() -> new BadCredentialsException("Nieprawidłowa nazwa użytkownika lub hasło"));
+
+        // 2. Weryfikuj hasło
+        if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
+            throw new BadCredentialsException("Nieprawidłowa nazwa użytkownika lub hasło");
+        }
+
+        // 3. Wygeneruj token JWT
+        String token = jwtTokenProvider.generateToken(user);
+
+        // 4. Zwróć odpowiedź z tokenem i czasem ważności
+        return new UserLoginResponseDto(token, "24h");
     }
 } 

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.grsw.deskhero.dto.UserLoginRequestDto;
+import pl.grsw.deskhero.dto.UserLoginResponseDto;
 import pl.grsw.deskhero.dto.UserRegisterRequestDto;
 import pl.grsw.deskhero.dto.UserRegisterResponseDto;
 import pl.grsw.deskhero.service.UserService;
@@ -25,5 +27,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    // Tutaj można dodać inne endpointy związane z użytkownikami (np. logowanie)
+    @PostMapping("/login")
+    public ResponseEntity<UserLoginResponseDto> login(@Valid @RequestBody UserLoginRequestDto requestDto) {
+        UserLoginResponseDto responseDto = userService.authenticate(requestDto);
+        return ResponseEntity.ok(responseDto);
+    }
 } 

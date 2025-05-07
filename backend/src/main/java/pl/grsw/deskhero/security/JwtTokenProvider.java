@@ -1,9 +1,10 @@
 package pl.grsw.deskhero.security;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import pl.grsw.deskhero.model.User; // Import encji User
 
@@ -35,6 +36,37 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // Można tu dodać metody do walidacji tokenu i ekstrakcji nazwy użytkownika,
-    // ale na razie skupiamy się na generowaniu.
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token);
+            return true;
+        } catch (SignatureException e) {
+            // Nieprawidłowy podpis JWT
+            return false;
+        } catch (MalformedJwtException e) {
+            // Nieprawidłowy format JWT
+            return false;
+        } catch (ExpiredJwtException e) {
+            // Token JWT wygasł
+            return false;
+        } catch (UnsupportedJwtException e) {
+            // Token JWT nie jest obsługiwany
+            return false;
+        } catch (IllegalArgumentException e) {
+            // Pusty lub nieprawidłowy string JWT
+            return false;
+        }
+    }
+
+    public String extractUsername(String token) {
+        return Jwts.parserBuilder()
+            .setSigningKey(getSigningKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody()
+            .getSubject();
+    }
 } 
