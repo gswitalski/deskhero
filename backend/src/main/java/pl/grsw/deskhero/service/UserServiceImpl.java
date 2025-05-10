@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.grsw.deskhero.dto.*;
 import pl.grsw.deskhero.exception.UserAlreadyExistsException;
+import pl.grsw.deskhero.model.Authority;
 import pl.grsw.deskhero.model.User;
 import pl.grsw.deskhero.repository.UserRepository;
 import pl.grsw.deskhero.security.JwtTokenProvider;
@@ -33,19 +34,17 @@ public class UserServiceImpl implements UserService {
         user.setName(requestDto.name());
         user.setPassword(passwordEncoder.encode(requestDto.password())); // Hashowanie hasła
 
-        // 3. Zapisz użytkownika w bazie danych
-        User savedUser = userRepository.save(user);
+        // 3. Przypisanie domyślnej roli ROLE_USER
+        user.addAuthority("ROLE_USER");
 
-        // 4. Przypisanie roli - na razie pominięte
-        // TODO: Implementacja przypisania domyślnej roli (np. ROLE_USER)
+        // 4. Zapisz użytkownika w bazie danych (kaskadowo zapisze też role)
+        User savedUser = userRepository.save(user);
 
         // 5. Wygeneruj token JWT
         String token = jwtTokenProvider.generateToken(savedUser);
 
         // 6. Przygotuj odpowiedź
-        UserDto userDto = UserDto.fromModel(savedUser);
-
-        return new UserRegisterResponseDto("User registered successfully", userDto, token);
+        return new UserRegisterResponseDto(token, 86400); // 86400 sekund = 24 godziny
     }
     
     @Override
@@ -63,7 +62,7 @@ public class UserServiceImpl implements UserService {
         // 3. Wygeneruj token JWT
         String token = jwtTokenProvider.generateToken(user);
 
-        // 4. Zwróć odpowiedź z tokenem i czasem ważności
-        return new UserLoginResponseDto(token, "24h");
+        // 4. Zwróć odpowiedź z tokenem i czasem ważności w sekundach
+        return new UserLoginResponseDto(token, 86400); // 86400 sekund = 24 godziny
     }
 } 

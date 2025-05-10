@@ -9,5 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserLoginResponseDto {
     private String token;
-    private String expiresIn;
+    private int expiresIn;
+    
+    public UserLoginResponseDto(String token) {
+        this(token, 86400); // 24 godziny w sekundach
+    }
 } 

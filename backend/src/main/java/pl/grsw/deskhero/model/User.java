@@ -3,6 +3,9 @@ package pl.grsw.deskhero.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "Users")
 @NoArgsConstructor
@@ -22,4 +25,14 @@ public class User {
 
     @Column(nullable = false, length = 255)
     private String password;
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Authority> authorities = new HashSet<>();
+    
+    // Metoda pomocnicza do dodawania roli
+    public void addAuthority(String authority) {
+        Authority auth = new Authority(this.username, authority);
+        auth.setUser(this);
+        this.authorities.add(auth);
+    }
 } 
