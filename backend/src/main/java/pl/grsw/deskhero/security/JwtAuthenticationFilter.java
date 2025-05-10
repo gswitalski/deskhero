@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,10 +14,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -39,21 +40,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 
                 // 4. Pobierz role z tokenu
                 List<String> roles = jwtTokenProvider.extractRoles(jwt);
+                
+                log.debug("Authenticated user {} with roles: {}", username, roles);
+                
+                // 5. Przekształć role na obiekty SimpleGrantedAuthority
                 List<SimpleGrantedAuthority> authorities = roles.stream()
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-                // 5. Utwórz Authentication z odpowiednimi uprawnieniami
+                // 6. Utwórz Authentication z odpowiednimi uprawnieniami
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         username, null, authorities);
                 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                // 6. Ustaw Authentication w SecurityContext
+                // 7. Ustaw Authentication w SecurityContext
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception ex) {
-            logger.error("Nie można ustawić uwierzytelnienia użytkownika", ex);
+            log.error("Nie można ustawić uwierzytelnienia użytkownika", ex);
         }
 
         filterChain.doFilter(request, response);

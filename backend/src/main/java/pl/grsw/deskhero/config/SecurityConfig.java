@@ -3,6 +3,7 @@ package pl.grsw.deskhero.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -16,6 +17,7 @@ import pl.grsw.deskhero.security.JwtTokenProvider;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -32,6 +34,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         // Zezwala na dostęp do endpointów rejestracji i logowania bez uwierzytelniania
                         .requestMatchers("/api/users/register", "/api/users/login").permitAll()
+                        // Zezwala na dostęp do przeglądania dostępności biurek bez logowania
+                        .requestMatchers("/api/desks/availability/**").permitAll()
+                        // Tylko administratorzy mają dostęp do endpointów administracyjnych
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // Wymaga uwierzytelnienia dla wszystkich pozostałych żądań
                         .anyRequest().authenticated()
                 )

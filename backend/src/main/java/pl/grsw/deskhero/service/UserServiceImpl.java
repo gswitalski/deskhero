@@ -12,6 +12,9 @@ import pl.grsw.deskhero.model.User;
 import pl.grsw.deskhero.repository.UserRepository;
 import pl.grsw.deskhero.security.JwtTokenProvider;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -59,10 +62,16 @@ public class UserServiceImpl implements UserService {
             throw new BadCredentialsException("Nieprawidłowa nazwa użytkownika lub hasło");
         }
 
-        // 3. Wygeneruj token JWT
+        // 3. Pobierz role użytkownika
+        Set<String> roles = user.getAuthorities()
+                .stream()
+                .map(Authority::getAuthority)
+                .collect(Collectors.toSet());
+
+        // 4. Wygeneruj token JWT zawierający informacje o rolach
         String token = jwtTokenProvider.generateToken(user);
 
-        // 4. Zwróć odpowiedź z tokenem i czasem ważności w sekundach
+        // 5. Zwróć odpowiedź z tokenem i czasem ważności w sekundach
         return new UserLoginResponseDto(token, 86400); // 86400 sekund = 24 godziny
     }
 } 
