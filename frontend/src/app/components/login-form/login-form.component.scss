@@ -1,0 +1,31 @@
+.form-field-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.submit-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.submit-button {
+  min-width: 150px;
+  height: 48px;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.password-mismatch-error {
+  margin-top: -12px;
+  margin-bottom: 16px;
+}

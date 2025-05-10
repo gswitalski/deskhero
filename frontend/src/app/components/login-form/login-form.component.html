@@ -14,41 +14,13 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Imię</mat-label>
-      <input matInput type="text" formControlName="name" autocomplete="name">
-
-      @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
-        <mat-error>Imię jest wymagane</mat-error>
-      }
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
       <mat-label>Hasło</mat-label>
-      <input matInput type="password" formControlName="password" autocomplete="new-password">
+      <input matInput type="password" formControlName="password" autocomplete="current-password">
 
       @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
         <mat-error>Hasło jest wymagane</mat-error>
       }
-
-      @if (form.get('password')?.hasError('minlength') && !form.get('password')?.hasError('required')) {
-        <mat-error>Hasło musi mieć co najmniej 8 znaków</mat-error>
-      }
     </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Potwierdź hasło</mat-label>
-      <input matInput type="password" formControlName="confirmPassword" autocomplete="new-password">
-
-      @if (form.get('confirmPassword')?.hasError('required') && form.get('confirmPassword')?.touched) {
-        <mat-error>Potwierdzenie hasła jest wymagane</mat-error>
-      }
-    </mat-form-field>
-
-    @if (form.hasError('passwordMismatch') && form.get('confirmPassword')?.touched) {
-      <div class="password-mismatch-error">
-        <mat-error>Hasła nie są zgodne</mat-error>
-      </div>
-    }
   </div>
 
   @if (errorMessage()) {
@@ -68,7 +40,7 @@
       @if (isLoading()) {
         <mat-spinner diameter="24" color="accent"></mat-spinner>
       } @else {
-        Zarejestruj się
+        Zaloguj się
       }
     </button>
   </div>

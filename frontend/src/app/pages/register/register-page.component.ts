@@ -24,11 +24,11 @@ export class RegisterPageComponent {
 
   onRegister(request: UserRegisterRequest): void {
     this.authService.register(request).subscribe({
-      next: (response) => {
-        this.snackBar.open('Rejestracja zakończona sukcesem', 'Zamknij', {
+      next: () => {
+        this.snackBar.open('Rejestracja zakończona sukcesem. Możesz się teraz zalogować.', 'Zamknij', {
           duration: 3000
         });
-        this.router.navigate(['/']);
+        this.router.navigate(['/login'], { queryParams: { registered: 'true' } });
       },
       error: (error) => {
         let errorMessage = 'Błąd rejestracji';

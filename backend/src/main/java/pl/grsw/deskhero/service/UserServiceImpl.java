@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
         // 4. Wygeneruj token JWT zawierający informacje o rolach
         String token = jwtTokenProvider.generateToken(user);
 
-        // 5. Zwróć odpowiedź z tokenem i czasem ważności w sekundach
-        return new UserLoginResponseDto(token, 86400); // 86400 sekund = 24 godziny
+        // 5. Zwróć odpowiedź z tokenem, czasem ważności w sekundach i imieniem użytkownika
+        return new UserLoginResponseDto(token, 86400, user.getName()); // 86400 sekund = 24 godziny
     }
 } 

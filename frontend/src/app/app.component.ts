@@ -10,7 +10,8 @@ import { AuthService } from './core/services/auth.service';
   template: `
     <app-nav-bar
       [isLoggedIn]="authService.isLoggedIn()"
-      [userName]="authService.user()?.name">
+      [userName]="authService.user()?.name"
+      (logout)="onLogout()">
     </app-nav-bar>
     <main>
       <router-outlet></router-outlet>
@@ -25,4 +26,8 @@ import { AuthService } from './core/services/auth.service';
 })
 export class AppComponent {
   protected authService = inject(AuthService);
+
+  onLogout(): void {
+    this.authService.logout();
+  }
 }

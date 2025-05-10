@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
@@ -18,4 +18,9 @@ import { RouterLink } from '@angular/router';
 export class NavBarComponent {
   @Input() isLoggedIn = false;
   @Input() userName?: string;
+  @Output() logout = new EventEmitter<void>();
+
+  onLogout(): void {
+    this.logout.emit();
+  }
 }

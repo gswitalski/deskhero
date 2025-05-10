@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, ValidationErrors } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -30,8 +30,9 @@ export class RegisterFormComponent {
   form: FormGroup = this.fb.group({
     username: ['', [Validators.required, Validators.email]],
     name: ['', Validators.required],
-    password: ['', [Validators.required, Validators.minLength(8)]]
-  });
+    password: ['', [Validators.required, Validators.minLength(8)]],
+    confirmPassword: ['', [Validators.required]]
+  }, { validators: this.passwordMatchValidator });
 
   submit(): void {
     if (this.form.valid) {
@@ -48,5 +49,13 @@ export class RegisterFormComponent {
         this.form.get(key)?.markAsTouched();
       });
     }
+  }
+
+  // Walidator zgodności haseł
+  passwordMatchValidator(form: FormGroup): ValidationErrors | null {
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+
+    return password === confirmPassword ? null : { passwordMismatch: true };
   }
 }
