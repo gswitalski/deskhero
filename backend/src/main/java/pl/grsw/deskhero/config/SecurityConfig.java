@@ -35,7 +35,7 @@ public class SecurityConfig {
                         // Zezwala na dostęp do endpointów rejestracji i logowania bez uwierzytelniania
                         .requestMatchers("/api/users/register", "/api/users/login").permitAll()
                         // Zezwala na dostęp do przeglądania dostępności biurek bez logowania
-                        .requestMatchers("/api/desks/availability/**").permitAll()
+                        .requestMatchers("/api/guest/desks/**").permitAll()
                         // Tylko administratorzy mają dostęp do endpointów administracyjnych
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // Wymaga uwierzytelnienia dla wszystkich pozostałych żądań
