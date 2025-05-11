@@ -15,7 +15,6 @@ public class ReservationDto {
     private Long userId; // Zgodnie z planem API, zwracamy ID użytkownika
     private Long deskId;
     private LocalDate reservationDate;
-    private String status;
 
     /**
      * Tworzy obiekt ReservationDto na podstawie obiektu modelu Reservation.
@@ -32,8 +31,8 @@ public class ReservationDto {
                 reservation.getUser() != null ? reservation.getUser().getId() : null,
                 // Zakładamy, że model Reservation ma pole desk z metodą getId()
                 reservation.getDesk() != null ? reservation.getDesk().getId() : null,
-                reservation.getReservationDate(),
-                reservation.getStatus()
+                reservation.getReservationDate()
+
         );
     }
 

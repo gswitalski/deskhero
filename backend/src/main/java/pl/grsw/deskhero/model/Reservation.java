@@ -26,7 +26,4 @@ public class Reservation {
 
     @Column(name = "reservation_date", nullable = false)
     private LocalDate reservationDate;
-
-    @Column(nullable = false, length = 10)
-    private String status;
 } 

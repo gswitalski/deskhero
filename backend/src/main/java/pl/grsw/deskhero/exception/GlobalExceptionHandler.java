@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import pl.grsw.deskhero.dto.ErrorDto;
+import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @Slf4j
@@ -123,6 +125,52 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
         return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Obsługa wyjątku ResourceNotFoundException.
+     * Zwraca kod HTTP 404 Not Found.
+     *
+     * @param ex wyjątek
+     * @param request żądanie web
+     * @return odpowiedź HTTP z ErrorDto
+     */
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
+        log.error("Nie znaleziono zasobu: {}", ex.getMessage());
+        
+        ErrorDto errorDto = new ErrorDto(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                "Not Found",
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDto);
+    }
+
+    /**
+     * Obsługa wyjątku ReservationConflictException.
+     * Zwraca kod HTTP 409 Conflict.
+     *
+     * @param ex wyjątek
+     * @param request żądanie web
+     * @return odpowiedź HTTP z ErrorDto
+     */
+    @ExceptionHandler(ReservationConflictException.class)
+    public ResponseEntity<ErrorDto> handleReservationConflictException(ReservationConflictException ex, WebRequest request) {
+        log.error("Konflikt rezerwacji: {}", ex.getMessage());
+        
+        ErrorDto errorDto = new ErrorDto(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                "Conflict",
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorDto);
     }
 
     // Można dodać handlery dla bardziej specyficznych wyjątków, np. DataAccessException

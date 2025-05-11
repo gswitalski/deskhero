@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.grsw.deskhero.dto.*;
+import pl.grsw.deskhero.exception.ResourceNotFoundException;
 import pl.grsw.deskhero.exception.UserAlreadyExistsException;
 import pl.grsw.deskhero.model.Authority;
 import pl.grsw.deskhero.model.User;
@@ -73,5 +74,13 @@ public class UserServiceImpl implements UserService {
 
         // 5. Zwróć odpowiedź z tokenem, czasem ważności w sekundach i imieniem użytkownika
         return new UserLoginResponseDto(token, 86400, user.getName()); // 86400 sekund = 24 godziny
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Long getUserIdByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Użytkownik", "username", username));
+        return user.getId();
     }
 } 

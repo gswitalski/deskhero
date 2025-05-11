@@ -15,23 +15,13 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
     /**
-     * Sprawdza, czy istnieje rezerwacja dla danego biurka w określonym dniu.
+     * Sprawdza, czy istnieje rezerwacja dla danego biurka na określony dzień.
      *
-     * @param deskId ID biurka.
-     * @param reservationDate Data rezerwacji.
-     * @return true, jeśli rezerwacja istnieje, false w przeciwnym razie.
+     * @param deskId identyfikator biurka
+     * @param reservationDate data rezerwacji
+     * @return true, jeśli istnieje rezerwacja, false w przeciwnym przypadku
      */
     boolean existsByDeskIdAndReservationDate(Long deskId, LocalDate reservationDate);
-
-    /**
-     * Sprawdza, czy istnieje aktywna rezerwacja dla danego biurka w określonym dniu.
-     *
-     * @param deskId ID biurka.
-     * @param reservationDate Data rezerwacji.
-     * @param status Status rezerwacji (np. "active").
-     * @return true, jeśli aktywna rezerwacja istnieje, false w przeciwnym razie.
-     */
-    boolean existsByDeskIdAndReservationDateAndStatus(Long deskId, LocalDate reservationDate, String status);
 
     /**
      * Znajduje wszystkie rezerwacje dla danego użytkownika.
@@ -42,15 +32,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findByUserId(Long userId);
 
     /**
-     * Znajduje wszystkie rezerwacje dla danego użytkownika o określonym statusie.
-     *
-     * @param userId ID użytkownika.
-     * @param status Status rezerwacji (np. "active", "cancelled").
-     * @return Lista rezerwacji użytkownika o podanym statusie.
-     */
-    List<Reservation> findByUserIdAndStatus(Long userId, String status);
-
-    /**
      * Znajduje wszystkie rezerwacje dla danego użytkownika w podanym zakresie dat.
      *
      * @param userId ID użytkownika.
@@ -59,17 +40,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
      * @return Lista rezerwacji użytkownika w podanym zakresie dat.
      */
     List<Reservation> findByUserIdAndReservationDateBetween(Long userId, LocalDate startDate, LocalDate endDate);
-
-    /**
-     * Znajduje wszystkie rezerwacje dla danego użytkownika o określonym statusie i w podanym zakresie dat.
-     *
-     * @param userId ID użytkownika.
-     * @param status Status rezerwacji.
-     * @param startDate Data początkowa zakresu.
-     * @param endDate Data końcowa zakresu.
-     * @return Lista rezerwacji użytkownika spełniających kryteria.
-     */
-    List<Reservation> findByUserIdAndStatusAndReservationDateBetween(Long userId, String status, LocalDate startDate, LocalDate endDate);
 
     /**
      * Znajduje rezerwacje dla listy biurek w określonym dniu.

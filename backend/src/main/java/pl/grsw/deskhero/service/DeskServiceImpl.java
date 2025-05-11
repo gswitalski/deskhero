@@ -19,8 +19,6 @@ public class DeskServiceImpl implements DeskService {
     private final DeskRepository deskRepository;
     private final ReservationRepository reservationRepository;
 
-    private static final String ACTIVE_RESERVATION_STATUS = "active";
-
     @Override
     @Transactional(readOnly = true)
     public List<DeskAvailabilityDto> getDesksAvailability(LocalDate date) {
@@ -28,10 +26,9 @@ public class DeskServiceImpl implements DeskService {
 
         return allDesks.stream()
                 .map(desk -> {
-                    boolean isReserved = reservationRepository.existsByDeskIdAndReservationDateAndStatus(
+                    boolean isReserved = reservationRepository.existsByDeskIdAndReservationDate(
                             desk.getId(),
-                            date,
-                            ACTIVE_RESERVATION_STATUS
+                            date
                     );
                     return DeskAvailabilityDto.fromModel(desk, !isReserved);
                 })
