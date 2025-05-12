@@ -2,12 +2,19 @@ import { Component, OnInit, Signal, WritableSignal, computed, effect, inject, si
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DateSelectorComponent } from './date-selector.component';
 import { DeskListComponent } from './desk-list.component';
 import { DeskAvailabilityService } from '../../core/services/desk-availability.service';
 import { DeskAvailabilityItem } from '../../shared/models/desk-availability.model';
+import { DeskAvailabilityViewModel, ReservationRequest, ReservationResponse } from '../../shared/models/reservation.model';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ReservationService } from '../../core/services/reservation.service';
+import { AuthService } from '../../core/services/auth.service';
+import { Router } from '@angular/router';
+import { ReservationConfirmDialogComponent } from './reservation-confirm-dialog.component';
+import { SnackbarService } from '../../core/services/snackbar.service';
 
 /**
  * Główny komponent strony głównej (HomePage)
@@ -22,7 +29,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     DeskListComponent,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDialogModule
   ],
   template: `
     <div class="home-page-container">
@@ -38,7 +46,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
       } @else if (error()) {
         <div class="error-container">
           <p class="error-message">{{ error() }}</p>
-          <button mat-raised-button color="primary" (click)="loadDeskAvailability()">
+          <button mat-raised-button color="primary" (click)="loadDesks()">
             Spróbuj ponownie
           </button>
         </div>
@@ -46,6 +54,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
         <app-desk-list
           [desks]="deskAvailabilityList()"
           [selectedDate]="selectedDate()"
+          [isLoggedIn]="isUserLoggedIn()"
+          (reservationRequested)="onReserveRequest($event)"
         ></app-desk-list>
       }
     </div>
@@ -81,14 +91,19 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 })
 export class HomePageComponent implements OnInit {
   // Wstrzykiwanie zależności
-  private deskService = inject(DeskAvailabilityService);
-  private snackBar = inject(MatSnackBar);
+  private deskAvailabilityService = inject(DeskAvailabilityService);
+  private reservationService = inject(ReservationService);
+  private authService = inject(AuthService);
+  private snackbarService = inject(SnackbarService);
+  private dialog = inject(MatDialog);
+  private router = inject(Router);
 
   // Sygnały
   public selectedDate: WritableSignal<Date> = signal<Date>(new Date());
-  public deskAvailabilityList: WritableSignal<DeskAvailabilityItem[] | null> = signal<DeskAvailabilityItem[] | null>(null);
+  public deskAvailabilityList: WritableSignal<DeskAvailabilityViewModel[] | null> = signal<DeskAvailabilityViewModel[] | null>(null);
   public isLoading: WritableSignal<boolean> = signal<boolean>(false);
   public error: WritableSignal<string | null> = signal<string | null>(null);
+  public isUserLoggedIn: Signal<boolean> = computed(() => this.authService.isLoggedIn());
 
   // Formatowana data dla API (YYYY-MM-DD)
   public formattedDate: Signal<string> = computed(() => {
@@ -102,7 +117,7 @@ export class HomePageComponent implements OnInit {
       // Odczytujemy wartość formattedDate aby zarejestrować zależność
       const dateForApi = this.formattedDate();
       // Ładujemy dane
-      this.loadDeskAvailability();
+      this.loadDesks();
     });
   }
 
@@ -120,16 +135,32 @@ export class HomePageComponent implements OnInit {
 
   /**
    * Ładuje dostępność biurek z API
+   * Dla zalogowanych użytkowników używa endpointu /api/desks/availability
+   * Dla gości używa endpointu /api/guest/desks/availability (poprzez DeskAvailabilityService)
    */
-  loadDeskAvailability(): void {
+  loadDesks(): void {
     this.isLoading.set(true);
     this.error.set(null);
 
     const dateForApi = this.formattedDate();
 
-    this.deskService.getDeskAvailability(dateForApi).subscribe({
+    // Używamy odpowiedniego serwisu w zależności od stanu logowania
+    const apiObservable = this.isUserLoggedIn()
+      ? this.reservationService.getAvailability(dateForApi)
+      : this.deskAvailabilityService.getDeskAvailability(dateForApi);
+
+    apiObservable.subscribe({
       next: (desks) => {
-        this.deskAvailabilityList.set(desks);
+        // Mapujemy DeskAvailabilityItem na DeskAvailabilityViewModel
+        // (obecnie są identyczne, ale mogą się różnić w przyszłości)
+        const viewModels: DeskAvailabilityViewModel[] = desks.map(desk => ({
+          deskId: desk.id,
+          roomName: desk.roomName,
+          deskNumber: desk.deskNumber,
+          isAvailable: desk.isAvailable
+        }));
+
+        this.deskAvailabilityList.set(viewModels);
         this.isLoading.set(false);
       },
       error: (error: HttpErrorResponse) => {
@@ -139,16 +170,86 @@ export class HomePageComponent implements OnInit {
 
         if (error.status === 400) {
           errorMessage = 'Wybrana data jest nieprawidłowa. Proszę wybrać poprawną datę.';
+        } else if (error.status === 401) {
+          this.router.navigate(['/login']);
+          errorMessage = 'Sesja wygasła. Zaloguj się ponownie.';
         }
 
         this.error.set(errorMessage);
         this.isLoading.set(false);
         this.deskAvailabilityList.set(null);
 
-        this.snackBar.open(errorMessage, 'Zamknij', {
-          duration: 5000,
-          panelClass: 'error-snackbar'
+        this.snackbarService.error(errorMessage);
+      }
+    });
+  }
+
+  /**
+   * Obsługuje żądanie rezerwacji biurka
+   */
+  onReserveRequest(desk: DeskAvailabilityViewModel): void {
+    // Sprawdzamy, czy użytkownik jest zalogowany
+    if (!this.isUserLoggedIn()) {
+      this.snackbarService.info('Zaloguj się, aby zarezerwować biurko', 'Zaloguj')
+        .onAction().subscribe(() => {
+          this.router.navigate(['/login']);
         });
+      return;
+    }
+
+    // Otwieramy dialog potwierdzenia
+    const dialogRef = this.dialog.open(ReservationConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        desk: desk,
+        date: this.selectedDate()
+      }
+    });
+
+    // Obsługujemy odpowiedź z dialogu
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.createReservation(desk);
+      }
+    });
+  }
+
+  /**
+   * Tworzy rezerwację biurka
+   */
+  private createReservation(desk: DeskAvailabilityViewModel): void {
+    const request: ReservationRequest = {
+      deskId: desk.deskId,
+      reservationDate: this.formattedDate()
+    };
+
+    this.isLoading.set(true);
+
+    this.reservationService.createReservation(request).subscribe({
+      next: (response: ReservationResponse) => {
+        this.isLoading.set(false);
+
+        this.snackbarService.success('Biurko zostało zarezerwowane pomyślnie!');
+
+        // Odświeżamy listę, aby pokazać aktualne dane
+        this.loadDesks();
+      },
+      error: (error: HttpErrorResponse) => {
+        this.isLoading.set(false);
+        console.error('Błąd podczas rezerwacji biurka', error);
+
+        let errorMessage = 'Nie udało się zarezerwować biurka. Spróbuj ponownie później.';
+
+        if (error.status === 400) {
+          errorMessage = 'Nieprawidłowe dane rezerwacji.';
+        } else if (error.status === 409) {
+          errorMessage = 'To biurko jest już zarezerwowane na ten dzień.';
+        } else if (error.status === 401) {
+          this.router.navigate(['/login']);
+          errorMessage = 'Sesja wygasła. Zaloguj się ponownie.';
+        }
+
+        this.snackbarService.error(errorMessage);
       }
     });
   }

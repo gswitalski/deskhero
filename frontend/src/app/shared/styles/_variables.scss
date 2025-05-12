@@ -1,0 +1,105 @@
+/**
+ * Główny plik zmiennych SCSS dla aplikacji DeskHero
+ */
+
+// Kolory główne
+$primary-color: #3f51b5;
+$primary-color-light: #7986cb;
+$primary-color-dark: #303f9f;
+$accent-color: #ff4081;
+$accent-color-light: #ff80ab;
+$accent-color-dark: #f50057;
+
+// Kolory semantyczne
+$success-color: #4caf50;
+$error-color: #f44336;
+$warning-color: #ff9800;
+$info-color: #2196f3;
+
+// Kolory tekstu
+$primary-text-color: rgba(0, 0, 0, 0.87);
+$secondary-text-color: rgba(0, 0, 0, 0.6);
+$disabled-text-color: rgba(0, 0, 0, 0.38);
+
+// Kolory tła
+$background-color: #fafafa;
+$surface-color: #ffffff;
+$divider-color: rgba(0, 0, 0, 0.12);
+
+// Breakpointy
+$breakpoint-xs: 0;
+$breakpoint-sm: 600px;
+$breakpoint-md: 960px;
+$breakpoint-lg: 1280px;
+$breakpoint-xl: 1920px;
+
+// Spacing
+$spacing-unit: 8px;
+$spacing-xs: $spacing-unit;
+$spacing-sm: $spacing-unit * 2;
+$spacing-md: $spacing-unit * 3;
+$spacing-lg: $spacing-unit * 4;
+$spacing-xl: $spacing-unit * 5;
+
+// Shadows
+$shadow-1: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+$shadow-2: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+$shadow-3: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+$shadow-4: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+$shadow-5: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+
+// Animacje
+$transition-quick: 0.15s ease;
+$transition-medium: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// Border radius
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 16px;
+$border-radius-xl: 24px;
+
+// Generuje zmienne CSS root z zmiennych SCSS
+:root {
+  --primary-color: #{$primary-color};
+  --primary-color-light: #{$primary-color-light};
+  --primary-color-dark: #{$primary-color-dark};
+  --accent-color: #{$accent-color};
+  --accent-color-light: #{$accent-color-light};
+  --accent-color-dark: #{$accent-color-dark};
+
+  --success-color: #{$success-color};
+  --error-color: #{$error-color};
+  --warning-color: #{$warning-color};
+  --info-color: #{$info-color};
+
+  --primary-text-color: #{$primary-text-color};
+  --secondary-text-color: #{$secondary-text-color};
+  --disabled-text-color: #{$disabled-text-color};
+
+  --background-color: #{$background-color};
+  --surface-color: #{$surface-color};
+  --divider-color: #{$divider-color};
+
+  --spacing-unit: #{$spacing-unit};
+  --spacing-xs: #{$spacing-xs};
+  --spacing-sm: #{$spacing-sm};
+  --spacing-md: #{$spacing-md};
+  --spacing-lg: #{$spacing-lg};
+  --spacing-xl: #{$spacing-xl};
+
+  --shadow-1: #{$shadow-1};
+  --shadow-2: #{$shadow-2};
+  --shadow-3: #{$shadow-3};
+  --shadow-4: #{$shadow-4};
+  --shadow-5: #{$shadow-5};
+
+  --transition-quick: #{$transition-quick};
+  --transition-medium: #{$transition-medium};
+  --transition-slow: #{$transition-slow};
+
+  --border-radius-sm: #{$border-radius-sm};
+  --border-radius-md: #{$border-radius-md};
+  --border-radius-lg: #{$border-radius-lg};
+  --border-radius-xl: #{$border-radius-xl};
+}

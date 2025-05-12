@@ -1,0 +1,68 @@
+/**
+ * Style dla komponentów MatSnackBar
+ * Definiuje różne typy powiadomień: sukces, błąd, informacja, ostrzeżenie
+ */
+
+// Style wspólne dla wszystkich snackbarów
+.mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-shape: 4px;
+
+  .mdc-snackbar__surface {
+    min-width: 300px;
+    border-radius: 4px;
+    padding: 8px 16px;
+  }
+
+  .mdc-snackbar__label {
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  .mat-mdc-button {
+    font-weight: 500;
+  }
+}
+
+// Snackbar sukcesu - zielony
+.success-snackbar {
+  --mdc-snackbar-container-color: #e8f5e9;
+  --mdc-snackbar-supporting-text-color: #2e7d32;
+  --mat-snack-bar-button-color: #2e7d32;
+
+  .mdc-snackbar__surface {
+    border-left: 4px solid #2e7d32;
+  }
+}
+
+// Snackbar błędu - czerwony
+.error-snackbar {
+  --mdc-snackbar-container-color: #ffebee;
+  --mdc-snackbar-supporting-text-color: #c62828;
+  --mat-snack-bar-button-color: #c62828;
+
+  .mdc-snackbar__surface {
+    border-left: 4px solid #c62828;
+  }
+}
+
+// Snackbar informacyjny - niebieski
+.info-snackbar {
+  --mdc-snackbar-container-color: #e3f2fd;
+  --mdc-snackbar-supporting-text-color: #1565c0;
+  --mat-snack-bar-button-color: #1565c0;
+
+  .mdc-snackbar__surface {
+    border-left: 4px solid #1565c0;
+  }
+}
+
+// Snackbar ostrzeżenia - pomarańczowy
+.warning-snackbar {
+  --mdc-snackbar-container-color: #fff8e1;
+  --mdc-snackbar-supporting-text-color: #f57f17;
+  --mat-snack-bar-button-color: #f57f17;
+
+  .mdc-snackbar__surface {
+    border-left: 4px solid #f57f17;
+  }
+}

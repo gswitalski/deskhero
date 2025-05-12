@@ -1,10 +1,11 @@
-import { Component, Input, Signal, computed, signal } from '@angular/core';
+import { Component, Input, Signal, Output, EventEmitter, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
-import { DeskAvailabilityItem } from '../../shared/models/desk-availability.model';
+import { MatButtonModule } from '@angular/material/button';
+import { DeskAvailabilityViewModel } from '../../shared/models/reservation.model';
 
 /**
  * Komponent odpowiedzialny za wyświetlanie listy biurek dla wybranej daty
@@ -13,7 +14,14 @@ import { DeskAvailabilityItem } from '../../shared/models/desk-availability.mode
 @Component({
   selector: 'app-desk-list',
   standalone: true,
-  imports: [CommonModule, MatListModule, MatCardModule, MatIconModule, MatDividerModule],
+  imports: [
+    CommonModule,
+    MatListModule,
+    MatCardModule,
+    MatIconModule,
+    MatDividerModule,
+    MatButtonModule
+  ],
   template: `
     <div class="desk-list-container">
       <mat-card>
@@ -35,18 +43,30 @@ import { DeskAvailabilityItem } from '../../shared/models/desk-availability.mode
                       <span class="room-name">{{ desk.roomName }}</span>
                       <span class="desk-number">Biurko {{ desk.deskNumber }}</span>
                     </div>
-                    <div
-                      class="desk-status"
-                      [class.available]="desk.isAvailable"
-                      [class.unavailable]="!desk.isAvailable"
-                      [attr.aria-label]="desk.isAvailable ? 'Biurko dostępne' : 'Biurko zajęte'"
-                    >
-                      @if (desk.isAvailable) {
-                        <mat-icon aria-hidden="true">check_circle</mat-icon>
-                        <span>Dostępne</span>
-                      } @else {
-                        <mat-icon aria-hidden="true">cancel</mat-icon>
-                        <span>Zajęte</span>
+                    <div class="desk-actions">
+                      <div
+                        class="desk-status"
+                        [class.available]="desk.isAvailable"
+                        [class.unavailable]="!desk.isAvailable"
+                        [attr.aria-label]="desk.isAvailable ? 'Biurko dostępne' : 'Biurko zajęte'"
+                      >
+                        @if (desk.isAvailable) {
+                          <mat-icon aria-hidden="true">check_circle</mat-icon>
+                          <span>Dostępne</span>
+                        } @else {
+                          <mat-icon aria-hidden="true">cancel</mat-icon>
+                          <span>Zajęte</span>
+                        }
+                      </div>
+                      @if (isLoggedIn && desk.isAvailable) {
+                        <button
+                          mat-raised-button
+                          color="primary"
+                          (click)="onReserveClick(desk)"
+                          aria-label="Zarezerwuj biurko"
+                        >
+                          Zarezerwuj
+                        </button>
                       }
                     </div>
                   </div>
@@ -101,6 +121,12 @@ import { DeskAvailabilityItem } from '../../shared/models/desk-availability.mode
       font-size: 0.9rem;
     }
 
+    .desk-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
     .desk-status {
       display: flex;
       align-items: center;
@@ -127,18 +153,24 @@ import { DeskAvailabilityItem } from '../../shared/models/desk-availability.mode
 })
 export class DeskListComponent {
   /** Lista biurek do wyświetlenia */
-  @Input({ required: false }) set desks(value: DeskAvailabilityItem[] | null) {
+  @Input({ required: false }) set desks(value: DeskAvailabilityViewModel[] | null) {
     this._desks.set(value);
   }
 
   /** Aktualnie wybrana data */
   @Input({ required: false }) selectedDate: Date | null = null;
 
+  /** Czy użytkownik jest zalogowany */
+  @Input({ required: false }) isLoggedIn = false;
+
+  /** Emiter zdarzenia żądania rezerwacji biurka */
+  @Output() reservationRequested = new EventEmitter<DeskAvailabilityViewModel>();
+
   /** Prywatny signal przechowujący listę biurek */
-  private _desks = signal<DeskAvailabilityItem[] | null>(null);
+  private _desks = signal<DeskAvailabilityViewModel[] | null>(null);
 
   /** Posortowana lista biurek (według roomName, a następnie deskNumber) */
-  sortedDesks: Signal<DeskAvailabilityItem[] | null> = computed(() => {
+  sortedDesks: Signal<DeskAvailabilityViewModel[] | null> = computed(() => {
     const desks = this._desks();
     if (!desks) return null;
     if (desks.length === 0) return [];
@@ -158,5 +190,12 @@ export class DeskListComponent {
    */
   formatDate(date: Date): string {
     return date.toLocaleDateString('pl-PL');
+  }
+
+  /**
+   * Obsługuje kliknięcie przycisku rezerwacji
+   */
+  onReserveClick(desk: DeskAvailabilityViewModel): void {
+    this.reservationRequested.emit(desk);
   }
 }
