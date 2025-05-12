@@ -1,4 +1,4 @@
-import { Component, Input, Signal, Output, EventEmitter, computed, signal } from '@angular/core';
+import { Component, Input, Signal, Output, EventEmitter, computed, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
@@ -14,6 +14,7 @@ import { DeskAvailabilityViewModel } from '../../shared/models/reservation.model
 @Component({
   selector: 'app-desk-list',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     MatListModule,
@@ -58,7 +59,7 @@ import { DeskAvailabilityViewModel } from '../../shared/models/reservation.model
                           <span>Zajęte</span>
                         }
                       </div>
-                      @if (isLoggedIn && desk.isAvailable) {
+                      @if (isLoggedIn && desk.isAvailable && isDateTodayOrLater()) {
                         <button
                           mat-raised-button
                           color="primary"
@@ -158,7 +159,19 @@ export class DeskListComponent {
   }
 
   /** Aktualnie wybrana data */
-  @Input({ required: false }) selectedDate: Date | null = null;
+  // Przechowuję wybraną datę w sygnale, aby móc reagować na zmiany i sprawdzać datę
+  private selectedDateSignal = signal<Date | null>(null);
+
+  /** Aktualnie wybrana data - setter ustawia sygnał */
+  @Input({ required: false })
+  set selectedDate(value: Date | null) {
+    this.selectedDateSignal.set(value);
+  }
+
+  /** Getter zwraca aktualną wartość wybranej daty */
+  public get selectedDate(): Date | null {
+    return this.selectedDateSignal();
+  }
 
   /** Czy użytkownik jest zalogowany */
   @Input({ required: false }) isLoggedIn = false;
@@ -183,6 +196,19 @@ export class DeskListComponent {
       // Jeśli nazwy pomieszczeń są takie same, sortuj według numeru biurka
       return a.deskNumber.localeCompare(b.deskNumber, undefined, { numeric: true });
     });
+  });
+
+  /**
+   * Sygnalizacja, czy wybrana data to dzisiaj lub późniejsza
+   */
+  isDateTodayOrLater = computed<boolean>(() => {
+    const date = this.selectedDateSignal();
+    if (!date) return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selected = new Date(date);
+    selected.setHours(0, 0, 0, 0);
+    return selected >= today;
   });
 
   /**
