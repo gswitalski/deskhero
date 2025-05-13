@@ -19,4 +19,13 @@ public interface DeskRepository extends JpaRepository<Desk, Long> {
      * @return true, jeśli biurko o podanej kombinacji już istnieje, false w przeciwnym razie.
      */
     boolean existsByRoomNameAndDeskNumber(String roomName, String deskNumber);
+
+    /**
+     * Sprawdza, czy istnieje biurko o podanej nazwie pokoju i numerze biurka, pomijając biurko o zadanym ID.
+     * @param roomName nazwa pokoju
+     * @param deskNumber numer biurka
+     * @param id ID biurka, które należy pominąć
+     * @return true, jeśli istnieje inne biurko o tej samej kombinacji, false w przeciwnym razie
+     */
+    boolean existsByRoomNameAndDeskNumberAndIdNot(String roomName, String deskNumber, Long id);
 } 

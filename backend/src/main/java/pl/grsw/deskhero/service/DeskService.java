@@ -11,4 +11,11 @@ public interface DeskService {
     List<DeskAvailabilityDto> getDesksAvailability(LocalDate date);
     List<DeskDto> getAllDesks();
     DeskDto createDesk(DeskRequestDto deskRequestDto);
+    /**
+     * Aktualizuje istniejące biurko o podanym ID.
+     * @param id identyfikator biurka
+     * @param deskRequestDto DTO z danymi do aktualizacji
+     * @return zaktualizowane biurko w postaci DTO
+     */
+    DeskDto updateDesk(Long id, DeskRequestDto deskRequestDto);
 } 

@@ -18,6 +18,8 @@ import pl.grsw.deskhero.dto.DeskRequestDto;
 import pl.grsw.deskhero.exception.DeskAlreadyExistsException;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/desks")
@@ -39,5 +41,12 @@ public class DeskAdminController {
     public ResponseEntity<DeskDto> createDesk(@Valid @RequestBody DeskRequestDto deskRequestDto) {
         DeskDto created = deskService.createDesk(deskRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<DeskDto> updateDesk(@PathVariable Long id, @Valid @RequestBody DeskRequestDto deskRequestDto) {
+        DeskDto updated = deskService.updateDesk(id, deskRequestDto);
+        return ResponseEntity.ok(updated);
     }
 } 
