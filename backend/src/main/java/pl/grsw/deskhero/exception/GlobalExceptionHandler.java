@@ -113,6 +113,20 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDto, HttpStatus.CONFLICT);
     }
 
+    // Handler dla wyjątku DeskAlreadyExistsException
+    @ExceptionHandler(DeskAlreadyExistsException.class)
+    public ResponseEntity<ErrorDto> handleDeskAlreadyExistsException(DeskAlreadyExistsException ex, HttpServletRequest request) {
+        log.warn("Conflict creating desk for request {}: {}", request.getRequestURI(), ex.getMessage());
+        ErrorDto errorDto = new ErrorDto(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(errorDto, HttpStatus.CONFLICT);
+    }
+
     // Ogólny handler dla innych wyjątków RuntimeException
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorDto> handleGenericRuntimeException(RuntimeException ex, HttpServletRequest request) {

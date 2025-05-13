@@ -14,6 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import pl.grsw.deskhero.security.JwtAuthenticationFilter;
 import pl.grsw.deskhero.security.JwtTokenProvider;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
@@ -36,6 +37,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/register", "/api/users/login").permitAll()
                         // Zezwala na dostęp do przeglądania dostępności biurek bez logowania
                         .requestMatchers("/api/guest/desks/**").permitAll()
+                        // Tylko administratorzy mają dostęp do tworzenia biurek
+                        .requestMatchers(HttpMethod.POST, "/api/desks").hasRole("ADMIN")
                         // Tylko administratorzy mają dostęp do endpointów administracyjnych
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // Wymaga uwierzytelnienia dla wszystkich pozostałych żądań

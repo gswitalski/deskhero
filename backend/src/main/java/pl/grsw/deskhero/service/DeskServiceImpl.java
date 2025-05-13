@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.grsw.deskhero.dto.DeskAvailabilityDto;
 import pl.grsw.deskhero.dto.DeskDto;
+import pl.grsw.deskhero.dto.DeskRequestDto;
+import pl.grsw.deskhero.exception.DeskAlreadyExistsException;
 import pl.grsw.deskhero.model.Desk;
 import pl.grsw.deskhero.repository.DeskRepository;
 import pl.grsw.deskhero.repository.ReservationRepository;
@@ -43,5 +45,20 @@ public class DeskServiceImpl implements DeskService {
                 .stream()
                 .map(DeskDto::fromModel)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public DeskDto createDesk(DeskRequestDto deskRequestDto) {
+        if (deskRepository.existsByRoomNameAndDeskNumber(
+                deskRequestDto.getRoomName(), deskRequestDto.getDeskNumber())) {
+            throw new DeskAlreadyExistsException(String.format(
+                    "Biurko %s w pokoju %s już istnieje",
+                    deskRequestDto.getDeskNumber(),
+                    deskRequestDto.getRoomName()));
+        }
+        Desk desk = deskRequestDto.toModel();
+        Desk savedDesk = deskRepository.save(desk);
+        return DeskDto.fromModel(savedDesk);
     }
 } 
