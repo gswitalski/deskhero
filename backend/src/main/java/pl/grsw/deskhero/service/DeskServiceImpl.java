@@ -83,4 +83,13 @@ public class DeskServiceImpl implements DeskService {
                 savedDesk.getId(), savedDesk.getRoomName(), savedDesk.getDeskNumber());
         return DeskDto.fromModel(savedDesk);
     }
+
+    @Override
+    @Transactional
+    public void deleteDesk(Long id) {
+        Desk desk = deskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Biurko", "id", id));
+        deskRepository.delete(desk);
+        log.info("Usunięto biurko: ID={}", id);
+    }
 } 

@@ -18,4 +18,5 @@ public interface DeskService {
      * @return zaktualizowane biurko w postaci DTO
      */
     DeskDto updateDesk(Long id, DeskRequestDto deskRequestDto);
+    void deleteDesk(Long id);
 } 

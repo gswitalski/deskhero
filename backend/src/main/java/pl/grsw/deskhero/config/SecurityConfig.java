@@ -41,6 +41,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/desks").hasRole("ADMIN")
                         // Tylko administratorzy mają dostęp do endpointów administracyjnych
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        // Tylko administratorzy mają dostęp do usuwania biurek
+                        .requestMatchers(HttpMethod.DELETE, "/api/desks/**").hasRole("ADMIN")
                         // Wymaga uwierzytelnienia dla wszystkich pozostałych żądań
                         .anyRequest().authenticated()
                 )

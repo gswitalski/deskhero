@@ -20,11 +20,16 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import jakarta.validation.constraints.Positive;
+import pl.grsw.deskhero.dto.DeleteDeskResponseDto;
+import org.springframework.validation.annotation.Validated;
 
 @RestController
 @RequestMapping("/api/desks")
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class DeskAdminController {
 
     private final DeskService deskService;
@@ -48,5 +53,12 @@ public class DeskAdminController {
     public ResponseEntity<DeskDto> updateDesk(@PathVariable Long id, @Valid @RequestBody DeskRequestDto deskRequestDto) {
         DeskDto updated = deskService.updateDesk(id, deskRequestDto);
         return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<DeleteDeskResponseDto> deleteDesk(@PathVariable @Positive Long id) {
+        deskService.deleteDesk(id);
+        return ResponseEntity.ok(new DeleteDeskResponseDto("Desk deleted successfully"));
     }
 } 
