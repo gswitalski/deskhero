@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.grsw.deskhero.dto.DeskAvailabilityDto;
+import pl.grsw.deskhero.dto.DeskDto;
 import pl.grsw.deskhero.model.Desk;
 import pl.grsw.deskhero.repository.DeskRepository;
 import pl.grsw.deskhero.repository.ReservationRepository;
@@ -32,6 +33,15 @@ public class DeskServiceImpl implements DeskService {
                     );
                     return DeskAvailabilityDto.fromModel(desk, !isReserved);
                 })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<DeskDto> getAllDesks() {
+        return deskRepository.findAll()
+                .stream()
+                .map(DeskDto::fromModel)
                 .collect(Collectors.toList());
     }
 } 

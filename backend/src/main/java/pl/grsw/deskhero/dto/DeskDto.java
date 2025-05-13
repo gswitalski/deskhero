@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.grsw.deskhero.model.Desk;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class DeskDto {
+    @JsonProperty("deskId")
     private Long id;
     private String roomName;
     private String deskNumber;
