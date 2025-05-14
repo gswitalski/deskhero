@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalDate;
+import java.util.List;
 import pl.grsw.deskhero.dto.ReservationDto;
 import pl.grsw.deskhero.dto.ReservationRequestDto;
 import pl.grsw.deskhero.exception.ResourceNotFoundException;
@@ -59,5 +64,21 @@ public class ReservationController {
         
         // Zwrócenie odpowiedzi z kodem 201 Created
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReservation);
+    }
+
+    /**
+     * Zwraca listę rezerwacji zalogowanego użytkownika z opcjonalnym filtrowaniem po przedziale dat.
+     */
+    @GetMapping
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<ReservationDto>> getReservations(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        Long userId = userService.getUserIdByUsername(username);
+
+        List<ReservationDto> reservations = reservationService.getReservationsForUser(userId, startDate, endDate);
+        return ResponseEntity.ok(reservations);
     }
 } 

@@ -14,6 +14,8 @@ public class ReservationDto {
     private Long reservationId;
     private Long userId; // Zgodnie z planem API, zwracamy ID użytkownika
     private Long deskId;
+    private String roomName;
+    private String deskNumber;
     private LocalDate reservationDate;
 
     /**
@@ -31,8 +33,11 @@ public class ReservationDto {
                 reservation.getUser() != null ? reservation.getUser().getId() : null,
                 // Zakładamy, że model Reservation ma pole desk z metodą getId()
                 reservation.getDesk() != null ? reservation.getDesk().getId() : null,
+                // nazwa pokoju
+                reservation.getDesk() != null ? reservation.getDesk().getRoomName() : null,
+                // numer biurka
+                reservation.getDesk() != null ? reservation.getDesk().getDeskNumber() : null,
                 reservation.getReservationDate()
-
         );
     }
 

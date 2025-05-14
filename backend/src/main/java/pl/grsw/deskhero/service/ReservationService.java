@@ -15,6 +15,8 @@ import pl.grsw.deskhero.repository.ReservationRepository;
 import pl.grsw.deskhero.repository.UserRepository;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -61,5 +63,30 @@ public class ReservationService {
                 savedReservation.getId(), userId, deskId, reservationDate);
 
         return ReservationDto.fromModel(savedReservation);
+    }
+
+    /**
+     * Pobiera listę rezerwacji użytkownika z opcjonalnym filtrowaniem po przedziale dat.
+     *
+     * @param userId    ID użytkownika
+     * @param startDate data początkowa zakresu (nullable)
+     * @param endDate   data końcowa zakresu (nullable)
+     * @return lista DTO rezerwacji
+     * @throws IllegalArgumentException jeśli startDate > endDate
+     */
+    @Transactional(readOnly = true)
+    public List<ReservationDto> getReservationsForUser(Long userId, LocalDate startDate, LocalDate endDate) {
+        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("startDate must be before or equal to endDate");
+        }
+        List<Reservation> reservations;
+        if (startDate != null && endDate != null) {
+            reservations = reservationRepository.findByUserIdAndReservationDateBetween(userId, startDate, endDate);
+        } else {
+            reservations = reservationRepository.findByUserId(userId);
+        }
+        return reservations.stream()
+                .map(ReservationDto::fromModel)
+                .collect(Collectors.toList());
     }
 } 
