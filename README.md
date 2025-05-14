@@ -21,6 +21,9 @@ DeskHero is a modern, efficient desk booking system designed to streamline the p
   - Spring Data, Spring Security
   - Lombok
   - PostgreSQL
+- **Testing:**
+  - **Unit Testing:** Jest, Testing Library (@testing-library/angular) for frontend; JUnit 5, Mockito, AssertJ, Spring Boot Test for backend
+  - **E2E Testing:** Playwright
 - **CI/CD & Hosting:**
   - GitHub Actions for CI/CD pipelines
   - DigitalOcean for deployment via Docker
