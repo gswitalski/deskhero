@@ -154,7 +154,7 @@ export class HomePageComponent implements OnInit {
         // Mapujemy DeskAvailabilityItem na DeskAvailabilityViewModel
         // (obecnie są identyczne, ale mogą się różnić w przyszłości)
         const viewModels: DeskAvailabilityViewModel[] = desks.map(desk => ({
-          deskId: desk.id,
+          deskId: desk.deskId,
           roomName: desk.roomName,
           deskNumber: desk.deskNumber,
           isAvailable: desk.isAvailable
