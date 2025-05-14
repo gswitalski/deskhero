@@ -17,6 +17,25 @@ export interface ReservationResponse {
 }
 
 /**
+ * Model reprezentujący rezerwację użytkownika z danymi biurka
+ */
+export interface Reservation {
+  reservationId: number;
+  userId: number;
+  deskId: number;
+  roomName: string;
+  deskNumber: string;
+  reservationDate: string; // Format ISO YYYY-MM-DD
+}
+
+/**
+ * Model reprezentujący odpowiedź po anulowaniu rezerwacji
+ */
+export interface DeleteReservationResponse {
+  message: string;
+}
+
+/**
  * Model pomocniczy do wyboru daty
  */
 export interface DateSelectionModel {

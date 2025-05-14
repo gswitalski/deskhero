@@ -7,6 +7,8 @@
     <button mat-button routerLink="/login">Zaloguj się</button>
   } @else {
     <span class="user-name">Witaj, {{userName || 'Użytkowniku'}}</span>
+    <button mat-button routerLink="/my-reservations">Moje rezerwacje</button>
+    <button mat-button routerLink="/dashboard">Panel</button>
     <button mat-button (click)="onLogout()">Wyloguj się</button>
   }
 </mat-toolbar>

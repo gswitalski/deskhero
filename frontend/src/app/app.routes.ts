@@ -36,6 +36,12 @@ export const routes: Routes = [
     canActivate: [() => inject(AuthGuard).canActivate()]
   },
   {
+    path: 'my-reservations',
+    loadComponent: () => import('./pages/my-reservations/my-reservations-page/my-reservations-page.component').then(c => c.MyReservationsPageComponent),
+    title: 'DeskHero - Moje rezerwacje',
+    canActivate: [() => inject(AuthGuard).canActivate()]
+  },
+  {
     path: 'admin',
     loadComponent: () => import('./pages/admin/admin-page.component').then(c => c.AdminPageComponent),
     title: 'DeskHero - Panel Administratora',

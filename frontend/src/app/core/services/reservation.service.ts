@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ReservationRequest, ReservationResponse } from '../../shared/models/reservation.model';
+import { ReservationRequest, ReservationResponse, Reservation, DeleteReservationResponse } from '../../shared/models/reservation.model';
 import { DeskAvailabilityItem } from '../../shared/models/desk-availability.model';
 
 /**
@@ -34,11 +34,19 @@ export class ReservationService {
   }
 
   /**
+   * Pobiera wszystkie rezerwacje bieżącego użytkownika
+   * @returns Lista rezerwacji użytkownika
+   */
+  getReservations(): Observable<Reservation[]> {
+    return this.http.get<Reservation[]>(this.reservationApiUrl);
+  }
+
+  /**
    * Anuluje istniejącą rezerwację
    * @param reservationId ID rezerwacji do anulowania
    * @returns Odpowiedź z API
    */
-  cancelReservation(reservationId: number): Observable<any> {
-    return this.http.delete(`${this.reservationApiUrl}/${reservationId}`);
+  deleteReservation(reservationId: number): Observable<DeleteReservationResponse> {
+    return this.http.delete<DeleteReservationResponse>(`${this.reservationApiUrl}/${reservationId}`);
   }
 }
