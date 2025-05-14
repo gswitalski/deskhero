@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import pl.grsw.deskhero.dto.ErrorDto;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -125,6 +126,20 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
         return new ResponseEntity<>(errorDto, HttpStatus.CONFLICT);
+    }
+
+    // Handler dla wyjątku AccessDeniedException
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorDto> handleAccessDeniedException(AccessDeniedException ex, HttpServletRequest request) {
+        log.warn("Brak uprawnień do wykonania operacji {}: {}", request.getRequestURI(), ex.getMessage());
+        ErrorDto errorDto = new ErrorDto(
+                LocalDateTime.now(),
+                HttpStatus.UNAUTHORIZED.value(),
+                HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(errorDto, HttpStatus.UNAUTHORIZED);
     }
 
     // Ogólny handler dla innych wyjątków RuntimeException

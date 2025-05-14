@@ -43,6 +43,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // Tylko administratorzy mają dostęp do usuwania biurek
                         .requestMatchers(HttpMethod.DELETE, "/api/desks/**").hasRole("ADMIN")
+                        // Tylko administratorzy i użytkownicy mają dostęp do usuwania rezerwacji
+                        .requestMatchers(HttpMethod.DELETE, "/api/reservations/**").hasAnyRole("USER", "ADMIN")
                         // Wymaga uwierzytelnienia dla wszystkich pozostałych żądań
                         .anyRequest().authenticated()
                 )

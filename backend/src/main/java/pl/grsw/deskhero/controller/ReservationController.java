@@ -22,6 +22,9 @@ import pl.grsw.deskhero.dto.ReservationRequestDto;
 import pl.grsw.deskhero.exception.ResourceNotFoundException;
 import pl.grsw.deskhero.service.ReservationService;
 import pl.grsw.deskhero.service.UserService;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import pl.grsw.deskhero.dto.DeleteReservationResponseDto;
 
 @RestController
 @RequestMapping("/api/reservations")
@@ -80,5 +83,18 @@ public class ReservationController {
 
         List<ReservationDto> reservations = reservationService.getReservationsForUser(userId, startDate, endDate);
         return ResponseEntity.ok(reservations);
+    }
+
+    /**
+     * Usuwa rezerwację biurka o podanym ID.
+     */
+    @DeleteMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<DeleteReservationResponseDto> deleteReservation(
+            @PathVariable("id") Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        DeleteReservationResponseDto response = reservationService.deleteReservation(id, username);
+        return ResponseEntity.ok(response);
     }
 } 

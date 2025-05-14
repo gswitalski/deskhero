@@ -13,6 +13,10 @@ import pl.grsw.deskhero.model.User;
 import pl.grsw.deskhero.repository.DeskRepository;
 import pl.grsw.deskhero.repository.ReservationRepository;
 import pl.grsw.deskhero.repository.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.AccessDeniedException;
+import pl.grsw.deskhero.dto.DeleteReservationResponseDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -88,5 +92,32 @@ public class ReservationService {
         return reservations.stream()
                 .map(ReservationDto::fromModel)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Usuwa istniejącą rezerwację o podanym ID, jeśli użytkownik jest właścicielem lub ma rolę ADMIN.
+     *
+     * @param reservationId ID rezerwacji do usunięcia
+     * @param username nazwa użytkownika wykonującego operację
+     * @return DTO potwierdzające usunięcie rezerwacji
+     */
+    @Transactional
+    public DeleteReservationResponseDto deleteReservation(Long reservationId, String username) {
+        if (reservationId == null || reservationId <= 0) {
+            throw new IllegalArgumentException("Nieprawidłowe ID rezerwacji: " + reservationId);
+        }
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Rezerwacja", "id", reservationId));
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        if (!reservation.getUser().getUsername().equals(username) && !isAdmin) {
+            throw new AccessDeniedException("Brak uprawnień do usunięcia tej rezerwacji");
+        }
+
+        reservationRepository.delete(reservation);
+        log.info("Usunięto rezerwację: ID={}, użytkownik={}", reservationId, username);
+        return new DeleteReservationResponseDto("Reservation deleted successfully");
     }
 } 
