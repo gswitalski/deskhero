@@ -5,6 +5,14 @@ export interface UserDto {
   roles: string[];
 }
 
+// Interfejs zawierający tylko podstawowe dane użytkownika (bez ról)
+// używany do przechowywania w localStorage
+export interface UserBasicInfo {
+  id: number;
+  username: string;
+  name: string;
+}
+
 export interface UserRegisterRequest {
   username: string;
   name: string;

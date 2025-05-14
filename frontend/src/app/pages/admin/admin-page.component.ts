@@ -6,6 +6,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { DeskManagementComponent } from './components/desk-management/desk-management.component';
 
 @Component({
   selector: 'app-admin-page',
@@ -16,7 +17,8 @@ import { AuthService } from '../../core/services/auth.service';
     MatButtonModule,
     MatTabsModule,
     MatIconModule,
-    RouterLink
+    RouterLink,
+    DeskManagementComponent
   ],
   template: `
     <div class="admin-container">
@@ -35,8 +37,7 @@ import { AuthService } from '../../core/services/auth.service';
           <mat-tab-group>
             <mat-tab label="Zarządzanie biurkami">
               <div class="tab-content">
-                <p>Tutaj będzie zarządzanie biurkami.</p>
-                <p>Funkcjonalność w trakcie implementacji.</p>
+                <app-desk-management></app-desk-management>
               </div>
             </mat-tab>
 
