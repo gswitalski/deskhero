@@ -18,6 +18,10 @@ jobs:
           distribution: 'temurin'
           cache: gradle
       
+      - name: Nadanie uprawnień dla gradlew
+        working-directory: ./backend
+        run: chmod +x ./gradlew
+      
       - name: Testowanie backendu
         working-directory: ./backend
         run: ./gradlew test
@@ -34,6 +38,10 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: gradle
+      
+      - name: Nadanie uprawnień dla gradlew
+        working-directory: ./backend
+        run: chmod +x ./gradlew
       
       - name: Konfiguracja Node.js
         uses: actions/setup-node@v4
