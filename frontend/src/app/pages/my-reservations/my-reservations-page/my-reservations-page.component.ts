@@ -1,5 +1,5 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
+import { Component, OnInit, computed, inject, signal, PLATFORM_ID, Inject } from '@angular/core';
+import { AsyncPipe, DatePipe, NgClass, isPlatformBrowser } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
@@ -189,6 +189,7 @@ export class MyReservationsPageComponent implements OnInit {
   private reservationService = inject(ReservationService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  private platformId = inject(PLATFORM_ID);
 
   // Sygnały stanu
   protected loading = signal<boolean>(false);
@@ -219,10 +220,16 @@ export class MyReservationsPageComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.loadReservations();
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadReservations();
+    }
   }
 
   loadReservations(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     this.loading.set(true);
     this.error.set(null);
 

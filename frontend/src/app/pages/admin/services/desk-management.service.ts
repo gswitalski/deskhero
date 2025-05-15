@@ -1,9 +1,10 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject, signal, PLATFORM_ID, Inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { catchError, finalize, map } from 'rxjs/operators';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 import { DeskDto, DeskRequestDto, DeleteDeskResponseDto } from '../../../shared/models/desk.model';
+import { isPlatformBrowser } from '@angular/common';
 
 export interface DeskTableItem {
   deskId: number;
@@ -17,6 +18,7 @@ export interface DeskTableItem {
 export class DeskManagementService {
   private http = inject(HttpClient);
   private apiUrl = '/api/desks';
+  private platformId = inject(PLATFORM_ID);
 
   // Sygnały stanu
   private desksSignal = signal<DeskTableItem[]>([]);
@@ -32,11 +34,19 @@ export class DeskManagementService {
   readonly desks$ = toObservable(this.desksSignal);
 
   constructor() {
-    this.loadDesks();
+    // Ładujemy biurka tylko w przeglądarce, nie podczas prerenderowania
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadDesks();
+    }
   }
 
   // Pobieranie listy biurek
   loadDesks(): void {
+    // Nie wykonujemy zapytań API podczas prerenderowania
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 

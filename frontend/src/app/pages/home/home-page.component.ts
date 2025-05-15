@@ -1,5 +1,5 @@
-import { Component, OnInit, Signal, WritableSignal, computed, effect, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, Signal, WritableSignal, computed, effect, inject, signal, PLATFORM_ID, Inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -111,13 +111,15 @@ export class HomePageComponent implements OnInit {
     return this.formatDateForApi(date);
   });
 
-  constructor() {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     // Efekt do automatycznego ładowania danych przy zmianie daty
     effect(() => {
       // Odczytujemy wartość formattedDate aby zarejestrować zależność
       const dateForApi = this.formattedDate();
-      // Ładujemy dane
-      this.loadDesks();
+      // Ładujemy dane tylko w przeglądarce, nie podczas prerenderowania
+      if (isPlatformBrowser(this.platformId)) {
+        this.loadDesks();
+      }
     });
   }
 
@@ -139,6 +141,11 @@ export class HomePageComponent implements OnInit {
    * Dla gości używa endpointu /api/guest/desks/availability (poprzez DeskAvailabilityService)
    */
   loadDesks(): void {
+    // Nie wykonujemy zapytań API podczas prerenderowania SSR
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     this.isLoading.set(true);
     this.error.set(null);
 

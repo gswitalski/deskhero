@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
@@ -21,10 +21,10 @@ import { AuthService } from '../../core/services/auth.service';
           <mat-card-title>Panel użytkownika</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <p>Witaj, {{ authService.user()?.name || 'Użytkowniku' }}!</p>
-          <p>Jesteś zalogowany jako: {{ authService.user()?.username }}</p>
+          <p>Witaj, {{ isBrowser && authService.user()?.name || 'Użytkowniku' }}!</p>
+          <p>Jesteś zalogowany jako: {{ isBrowser && authService.user()?.username || 'użytkownik' }}</p>
 
-          <p *ngIf="authService.isAdmin()">
+          <p *ngIf="isBrowser && authService.isAdmin()">
             <a mat-raised-button color="accent" routerLink="/admin">
               Przejdź do panelu administratora
             </a>
@@ -75,8 +75,12 @@ import { AuthService } from '../../core/services/auth.service';
 })
 export class DashboardPageComponent {
   protected authService = inject(AuthService);
+  private platformId = inject(PLATFORM_ID);
+  protected isBrowser = isPlatformBrowser(this.platformId);
 
   logout(): void {
-    this.authService.logout();
+    if (this.isBrowser) {
+      this.authService.logout();
+    }
   }
 }

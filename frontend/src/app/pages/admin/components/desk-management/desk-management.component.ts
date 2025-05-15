@@ -1,5 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, signal, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -142,6 +142,8 @@ export class DeskManagementComponent implements OnInit {
   private deskService = inject(DeskManagementService);
   private dialog = inject(MatDialog);
   private notificationService = inject(NotificationService);
+  private platformId = inject(PLATFORM_ID);
+  private isBrowser = isPlatformBrowser(this.platformId);
 
   // Stan komponentu używając sygnałów
   readonly loading = this.deskService.loading;
@@ -156,15 +158,17 @@ export class DeskManagementComponent implements OnInit {
   displayedColumns: string[] = ['deskId', 'roomName', 'deskNumber', 'actions'];
 
   ngOnInit(): void {
-    // Subskrybuj zmiany w liście biurek
-    this.deskService.desks$.subscribe(desks => {
-      this.desksSignal.set(desks);
-      this.applyFilter(); // Aktualizuj filtrowaną listę
-    });
+    // Subskrybuj zmiany w liście biurek tylko w przeglądarce
+    if (this.isBrowser) {
+      this.deskService.desks$.subscribe(desks => {
+        this.desksSignal.set(desks);
+        this.applyFilter(); // Aktualizuj filtrowaną listę
+      });
 
-    // Obserwuj błędy
-    if (this.error()) {
-      this.notificationService.showError(this.error() || 'Wystąpił nieznany błąd');
+      // Obserwuj błędy
+      if (this.error()) {
+        this.notificationService.showError(this.error() || 'Wystąpił nieznany błąd');
+      }
     }
   }
 

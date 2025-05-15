@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -29,7 +29,7 @@ import { DeskManagementComponent } from './components/desk-management/desk-manag
             Panel Administratora
           </mat-card-title>
           <mat-card-subtitle>
-            Zalogowany jako: {{ authService.user()?.username }}
+            Zalogowany jako: {{ isBrowser && authService.user()?.username || 'admin' }}
           </mat-card-subtitle>
         </mat-card-header>
 
@@ -107,8 +107,12 @@ import { DeskManagementComponent } from './components/desk-management/desk-manag
 })
 export class AdminPageComponent {
   protected authService = inject(AuthService);
+  private platformId = inject(PLATFORM_ID);
+  protected isBrowser = isPlatformBrowser(this.platformId);
 
   logout(): void {
-    this.authService.logout();
+    if (this.isBrowser) {
+      this.authService.logout();
+    }
   }
 }
