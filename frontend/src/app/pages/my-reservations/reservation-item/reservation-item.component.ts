@@ -6,7 +6,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Reservation } from '../../../shared/models/reservation.model';
 
 @Component({
-  selector: 'app-reservation-item',
+  selector: 'dehe-reservation-item',
   standalone: true,
   imports: [
     CommonModule,
@@ -77,9 +77,9 @@ import { Reservation } from '../../../shared/models/reservation.model';
 export class ReservationItemComponent {
   @Input() reservation!: Reservation;
   @Input() listType: 'upcoming' | 'past' = 'upcoming';
-  @Output() cancel = new EventEmitter<number>();
+  @Output() cancelRequest = new EventEmitter<number>();
 
   onCancelClick(): void {
-    this.cancel.emit(this.reservation.reservationId);
+    this.cancelRequest.emit(this.reservation.reservationId);
   }
 }

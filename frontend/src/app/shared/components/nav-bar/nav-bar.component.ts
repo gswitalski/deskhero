@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-nav-bar',
+  selector: 'dehe-nav-bar',
   standalone: true,
   imports: [
     MatToolbarModule,

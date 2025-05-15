@@ -8,11 +8,11 @@ import { AuthService } from './core/services/auth.service';
   standalone: true,
   imports: [RouterOutlet, NavBarComponent],
   template: `
-    <app-nav-bar
+    <dehe-nav-bar
       [isLoggedIn]="authService.isLoggedIn()"
       [userName]="authService.user()?.name"
       (logout)="onLogout()">
-    </app-nav-bar>
+    </dehe-nav-bar>
     <main>
       <router-outlet></router-outlet>
     </main>

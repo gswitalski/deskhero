@@ -7,7 +7,7 @@ import { UserRegisterRequest } from '../../shared/models/user.model';
 import { RegisterFormComponent } from '../../components/register-form';
 
 @Component({
-  selector: 'app-register-page',
+  selector: 'dehe-register-page',
   standalone: true,
   imports: [
     MatCardModule,

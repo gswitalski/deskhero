@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, OnInit, computed, inject, signal, PLATFORM_ID } from '@angular/core';
 import { AsyncPipe, DatePipe, NgClass, isPlatformBrowser } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -12,7 +12,7 @@ import { ReservationService } from '../../../core/services/reservation.service';
 import { Reservation, DeleteReservationResponse } from '../../../shared/models/reservation.model';
 
 @Component({
-  selector: 'app-my-reservations-page',
+  selector: 'dehe-my-reservations-page',
   standalone: true,
   imports: [
     AsyncPipe,
