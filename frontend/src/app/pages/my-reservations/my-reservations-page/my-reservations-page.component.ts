@@ -1,5 +1,5 @@
 import { Component, OnInit, computed, inject, signal, PLATFORM_ID } from '@angular/core';
-import { AsyncPipe, DatePipe, NgClass, isPlatformBrowser } from '@angular/common';
+import { DatePipe, isPlatformBrowser } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,9 +15,7 @@ import { Reservation, DeleteReservationResponse } from '../../../shared/models/r
   selector: 'dehe-my-reservations-page',
   standalone: true,
   imports: [
-    AsyncPipe,
     DatePipe,
-    NgClass,
     MatTabsModule,
     MatProgressSpinnerModule,
     MatButtonModule,

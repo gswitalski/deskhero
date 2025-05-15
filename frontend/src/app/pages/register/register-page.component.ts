@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { UserRegisterRequest } from '../../shared/models/user.model';
 import { RegisterFormComponent } from '../../components/register-form/register-form.component';
@@ -12,8 +12,7 @@ import { RegisterFormComponent } from '../../components/register-form/register-f
   imports: [
     MatCardModule,
     MatSnackBarModule,
-    RegisterFormComponent,
-    RouterLink
+    RegisterFormComponent
   ],
   templateUrl: './register-page.component.html',
   styleUrls: ['./register-page.component.scss']
