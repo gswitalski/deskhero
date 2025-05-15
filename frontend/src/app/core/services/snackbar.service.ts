@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { MatSnackBar, MatSnackBarConfig, MatSnackBarRef } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarConfig, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 
 /**
  * Serwis do zarządzania powiadomieniami (toastami) przy użyciu MatSnackBar
@@ -24,7 +24,7 @@ export class SnackbarService {
    * @param action Opcjonalny tekst przycisku akcji
    * @returns Referencja do utworzonego SnackBar
    */
-  success(message: string, action: string = 'OK'): MatSnackBarRef<any> {
+  success(message: string, action = 'OK'): MatSnackBarRef<TextOnlySnackBar> {
     return this.snackBar.open(message, action, {
       ...this.defaultConfig,
       panelClass: 'success-snackbar',
@@ -37,7 +37,7 @@ export class SnackbarService {
    * @param action Opcjonalny tekst przycisku akcji
    * @returns Referencja do utworzonego SnackBar
    */
-  error(message: string, action: string = 'Zamknij'): MatSnackBarRef<any> {
+  error(message: string, action = 'Zamknij'): MatSnackBarRef<TextOnlySnackBar> {
     return this.snackBar.open(message, action, {
       ...this.defaultConfig,
       panelClass: 'error-snackbar',
@@ -50,7 +50,7 @@ export class SnackbarService {
    * @param action Opcjonalny tekst przycisku akcji
    * @returns Referencja do utworzonego SnackBar
    */
-  info(message: string, action: string = 'OK'): MatSnackBarRef<any> {
+  info(message: string, action = 'OK'): MatSnackBarRef<TextOnlySnackBar> {
     return this.snackBar.open(message, action, {
       ...this.defaultConfig,
       panelClass: 'info-snackbar',
@@ -63,7 +63,7 @@ export class SnackbarService {
    * @param action Opcjonalny tekst przycisku akcji
    * @returns Referencja do utworzonego SnackBar
    */
-  warning(message: string, action: string = 'OK'): MatSnackBarRef<any> {
+  warning(message: string, action = 'OK'): MatSnackBarRef<TextOnlySnackBar> {
     return this.snackBar.open(message, action, {
       ...this.defaultConfig,
       panelClass: 'warning-snackbar',
