@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ReservationsService {
-
-  constructor() { }
+  // Konstruktor bez implementacji - na razie serwis nie wymaga inicjalizacji
+  constructor() {
+    // Ten serwis zostanie zaimplementowany w przyszłości
+  }
 }
