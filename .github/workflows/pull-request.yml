@@ -96,9 +96,20 @@ jobs:
             
             summary += `\n### Overall Status: ${overallStatus}`;
             
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.name,
-              body: summary
-            }); 
+            const { owner, repo } = context.repo;
+            
+            // Log current PR information for debugging
+            console.log(`PR Info - Owner: ${owner}, Repo: ${repo}, PR Number: ${context.issue.number}`);
+            
+            try {
+              await github.rest.issues.createComment({
+                owner: owner,
+                repo: repo,
+                issue_number: context.issue.number,
+                body: summary
+              });
+              console.log('Comment created successfully');
+            } catch (error) {
+              console.error('Error creating comment:', error);
+              core.setFailed(`Failed to create comment: ${error.message}`);
+            } 
