@@ -1,4 +1,4 @@
-name: DeskHero CI/CD
+name: DeskHero Test and Build Master
 
 on:
   push:
