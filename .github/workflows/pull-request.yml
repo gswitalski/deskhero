@@ -1,0 +1,96 @@
+name: Pull Request Workflow
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      # Frontend lint
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+          
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: npm ci
+        
+      - name: Lint Frontend
+        working-directory: frontend
+        run: npm run lint
+        
+      # Backend lint
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
+          
+      - name: Lint Backend
+        working-directory: backend
+        run: ./gradlew checkstyleMain checkstyleTest
+
+  test:
+    name: Unit Tests
+    needs: lint
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
+          
+      - name: Run Backend Tests
+        working-directory: backend
+        run: ./gradlew test
+
+  status-comment:
+    name: Update PR Status
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Create Status Comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const lintStatus = '${{ needs.lint.result }}';
+            const testStatus = '${{ needs.test.result }}';
+            
+            let summary = '## Pull Request Status 🚦\n\n';
+            
+            summary += '### Lint Status\n';
+            summary += lintStatus === 'success' ? '✅ Passed\n\n' : '❌ Failed\n\n';
+            
+            summary += '### Test Status\n';
+            summary += testStatus === 'success' ? '✅ Passed\n\n' : '❌ Failed\n\n';
+            
+            const overallStatus = (lintStatus === 'success' && testStatus === 'success') 
+              ? '🎉 All checks passed!' 
+              : '❌ Some checks failed';
+            
+            summary += `\n### Overall Status: ${overallStatus}`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.name,
+              body: summary
+            }); 
