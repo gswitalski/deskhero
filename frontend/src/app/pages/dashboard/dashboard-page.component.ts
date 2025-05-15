@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
-  selector: 'app-dashboard-page',
+  selector: 'dehe-dashboard-page',
   standalone: true,
   imports: [
     CommonModule,

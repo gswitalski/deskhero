@@ -7,7 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoginRequest } from '../../shared/models/user.model';
 
 @Component({
-  selector: 'app-login-form',
+  selector: 'dehe-login-form',
   standalone: true,
   imports: [
     ReactiveFormsModule,

@@ -16,7 +16,7 @@ import { DeskDto } from '../../../../shared/models/desk.model';
 import { NotificationService } from '../../../../shared/services/notification.service';
 
 @Component({
-  selector: 'app-desk-management',
+  selector: 'dehe-desk-management',
   standalone: true,
   imports: [
     CommonModule,

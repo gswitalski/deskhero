@@ -9,7 +9,7 @@ import { MatCardModule } from '@angular/material/card';
  * Wyświetla zakres 7 dni (tydzień) i umożliwia nawigację między tygodniami
  */
 @Component({
-  selector: 'app-date-selector',
+  selector: 'dehe-date-selector',
   standalone: true,
   imports: [CommonModule, MatButtonModule, MatIconModule, MatCardModule],
   template: `

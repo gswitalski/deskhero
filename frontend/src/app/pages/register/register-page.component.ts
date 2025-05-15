@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { UserRegisterRequest } from '../../shared/models/user.model';
-import { RegisterFormComponent } from '../../components/register-form';
+import { RegisterFormComponent } from '../../components/register-form/register-form.component';
 
 @Component({
   selector: 'dehe-register-page',
@@ -12,7 +12,8 @@ import { RegisterFormComponent } from '../../components/register-form';
   imports: [
     MatCardModule,
     MatSnackBarModule,
-    RegisterFormComponent
+    RegisterFormComponent,
+    RouterLink
   ],
   templateUrl: './register-page.component.html',
   styleUrls: ['./register-page.component.scss']

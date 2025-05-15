@@ -9,7 +9,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { DeskManagementComponent } from './components/desk-management/desk-management.component';
 
 @Component({
-  selector: 'app-admin-page',
+  selector: 'dehe-admin-page',
   standalone: true,
   imports: [
     CommonModule,
@@ -37,7 +37,7 @@ import { DeskManagementComponent } from './components/desk-management/desk-manag
           <mat-tab-group>
             <mat-tab label="Zarządzanie biurkami">
               <div class="tab-content">
-                <app-desk-management></app-desk-management>
+                <dehe-desk-management></dehe-desk-management>
               </div>
             </mat-tab>
 
