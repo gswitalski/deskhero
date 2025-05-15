@@ -5,7 +5,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { DeskManagementComponent } from './components/desk-management/desk-management.component';
 
 @Component({
-  selector: 'app-admin',
+  selector: 'dehe-admin',
   standalone: true,
   imports: [
     CommonModule,
@@ -22,7 +22,7 @@ import { DeskManagementComponent } from './components/desk-management/desk-manag
       <div class="admin-content">
         <mat-tab-group>
           <mat-tab label="Zarządzanie Biurkami">
-            <app-desk-management></app-desk-management>
+            <dehe-desk-management></dehe-desk-management>
           </mat-tab>
           <!-- Tutaj można dodać więcej zakładek dla innych funkcji administracyjnych -->
         </mat-tab-group>

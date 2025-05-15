@@ -17,7 +17,7 @@ export class AuthService {
   private userSignal = signal<UserDto | null>(null);
   private isLoggedInSignal = signal<boolean>(false);
   private userRolesSignal = signal<string[]>([]);
-  private logoutTimer: any = null;
+  private logoutTimer: ReturnType<typeof setTimeout> | null = null;
 
   // Expose readonly signals
   readonly user = this.userSignal.asReadonly();
@@ -137,7 +137,7 @@ export class AuthService {
 
   register(payload: UserRegisterRequest): Observable<AuthResponse> {
     // Usuwamy pole confirmPassword przed wysłaniem do API
-    const { confirmPassword, ...requestData } = payload;
+    const { ...requestData } = payload;
 
     return this.http.post<AuthResponse>('/api/users/register', requestData);
   }

@@ -16,7 +16,7 @@ export interface ReservationConfirmDialogData {
  * Komponent dialogu potwierdzającego rezerwację biurka
  */
 @Component({
-  selector: 'app-reservation-confirm-dialog',
+  selector: 'dehe-reservation-confirm-dialog',
   standalone: true,
   imports: [
     CommonModule,

@@ -12,7 +12,7 @@ import { DeskAvailabilityViewModel } from '../../shared/models/reservation.model
  * Sortuje biurka według roomName, a następnie deskNumber
  */
 @Component({
-  selector: 'app-desk-list',
+  selector: 'dehe-desk-list',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [

@@ -12,7 +12,7 @@ export interface DeskFormDialogData {
 }
 
 @Component({
-  selector: 'app-desk-form-dialog',
+  selector: 'dehe-desk-form-dialog',
   standalone: true,
   imports: [
     CommonModule,

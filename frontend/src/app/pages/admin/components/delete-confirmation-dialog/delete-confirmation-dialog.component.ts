@@ -9,7 +9,7 @@ export interface DeleteConfirmationDialogData {
 }
 
 @Component({
-  selector: 'app-delete-confirmation-dialog',
+  selector: 'dehe-delete-confirmation-dialog',
   standalone: true,
   imports: [
     CommonModule,

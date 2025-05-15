@@ -7,7 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UserRegisterRequest } from '../../shared/models/user.model';
 
 @Component({
-  selector: 'app-register-form',
+  selector: 'dehe-register-form',
   standalone: true,
   imports: [
     ReactiveFormsModule,

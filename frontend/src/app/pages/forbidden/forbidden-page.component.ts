@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-forbidden-page',
+  selector: 'dehe-forbidden-page',
   standalone: true,
   imports: [
     RouterLink,

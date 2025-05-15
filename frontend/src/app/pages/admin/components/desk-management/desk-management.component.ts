@@ -1,11 +1,11 @@
 import { Component, OnInit, inject, signal, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSortModule, Sort } from '@angular/material/sort';
+import { MatSortModule } from '@angular/material/sort';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
@@ -16,7 +16,7 @@ import { DeskDto } from '../../../../shared/models/desk.model';
 import { NotificationService } from '../../../../shared/services/notification.service';
 
 @Component({
-  selector: 'app-desk-management',
+  selector: 'dehe-desk-management',
   standalone: true,
   imports: [
     CommonModule,
@@ -204,7 +204,7 @@ export class DeskManagementComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.deskService.addDesk(result).subscribe({
-          next: (desk) => {
+          next: () => {
             this.notificationService.showSuccess('Biurko zostało dodane pomyślnie');
             this.deskService.refreshDesks();
           },
@@ -232,7 +232,7 @@ export class DeskManagementComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.deskService.updateDesk(desk.deskId, result).subscribe({
-          next: (updatedDesk) => {
+          next: () => {
             this.notificationService.showSuccess('Biurko zostało zaktualizowane pomyślnie');
             this.deskService.refreshDesks();
           },
@@ -260,7 +260,7 @@ export class DeskManagementComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.deskService.deleteDesk(desk.deskId).subscribe({
-          next: (response) => {
+          next: () => {
             this.notificationService.showSuccess('Biurko zostało usunięte pomyślnie');
             this.deskService.refreshDesks();
           },

@@ -1,5 +1,5 @@
-import { Component, OnInit, computed, inject, signal, PLATFORM_ID, Inject } from '@angular/core';
-import { AsyncPipe, DatePipe, NgClass, isPlatformBrowser } from '@angular/common';
+import { Component, OnInit, computed, inject, signal, PLATFORM_ID } from '@angular/core';
+import { DatePipe, isPlatformBrowser } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,12 +12,10 @@ import { ReservationService } from '../../../core/services/reservation.service';
 import { Reservation, DeleteReservationResponse } from '../../../shared/models/reservation.model';
 
 @Component({
-  selector: 'app-my-reservations-page',
+  selector: 'dehe-my-reservations-page',
   standalone: true,
   imports: [
-    AsyncPipe,
     DatePipe,
-    NgClass,
     MatTabsModule,
     MatProgressSpinnerModule,
     MatButtonModule,

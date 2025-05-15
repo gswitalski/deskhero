@@ -6,8 +6,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DateSelectorComponent } from './date-selector.component';
 import { DeskListComponent } from './desk-list.component';
 import { DeskAvailabilityService } from '../../core/services/desk-availability.service';
-import { DeskAvailabilityItem } from '../../shared/models/desk-availability.model';
-import { DeskAvailabilityViewModel, ReservationRequest, ReservationResponse } from '../../shared/models/reservation.model';
+import { DeskAvailabilityViewModel, ReservationRequest } from '../../shared/models/reservation.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ReservationService } from '../../core/services/reservation.service';
@@ -21,7 +20,7 @@ import { SnackbarService } from '../../core/services/snackbar.service';
  * Container component odpowiedzialny za zarządzanie stanem i koordynację komponentów potomnych
  */
 @Component({
-  selector: 'app-home-page',
+  selector: 'dehe-home-page',
   standalone: true,
   imports: [
     CommonModule,
@@ -36,7 +35,7 @@ import { SnackbarService } from '../../core/services/snackbar.service';
     <div class="home-page-container">
       <h1 class="page-title">DeskHero - Rezerwacja biurek</h1>
 
-      <app-date-selector (dateSelected)="onDateSelected($event)"></app-date-selector>
+      <dehe-date-selector (dateSelected)="onDateSelected($event)"></dehe-date-selector>
 
       @if (isLoading()) {
         <div class="loading-container">
@@ -51,12 +50,12 @@ import { SnackbarService } from '../../core/services/snackbar.service';
           </button>
         </div>
       } @else {
-        <app-desk-list
+        <dehe-desk-list
           [desks]="deskAvailabilityList()"
           [selectedDate]="selectedDate()"
           [isLoggedIn]="isUserLoggedIn()"
           (reservationRequested)="onReserveRequest($event)"
-        ></app-desk-list>
+        ></dehe-desk-list>
       }
     </div>
   `,
@@ -111,11 +110,11 @@ export class HomePageComponent implements OnInit {
     return this.formatDateForApi(date);
   });
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(@Inject(PLATFORM_ID) private platformId: object) {
     // Efekt do automatycznego ładowania danych przy zmianie daty
     effect(() => {
       // Odczytujemy wartość formattedDate aby zarejestrować zależność
-      const dateForApi = this.formattedDate();
+      this.formattedDate();
       // Ładujemy dane tylko w przeglądarce, nie podczas prerenderowania
       if (isPlatformBrowser(this.platformId)) {
         this.loadDesks();
@@ -124,7 +123,8 @@ export class HomePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Początkowe ładowanie danych nastąpi automatycznie dzięki effect
+    // Inicjalizacja komponentu - ładowanie danych nastąpi automatycznie dzięki effect
+    console.log('HomePage component initialized');
   }
 
   /**
@@ -233,7 +233,7 @@ export class HomePageComponent implements OnInit {
     this.isLoading.set(true);
 
     this.reservationService.createReservation(request).subscribe({
-      next: (response: ReservationResponse) => {
+      next: () => {
         this.isLoading.set(false);
 
         this.snackbarService.success('Biurko zostało zarezerwowane pomyślnie!');

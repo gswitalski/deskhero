@@ -4,10 +4,10 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { UserRegisterRequest } from '../../shared/models/user.model';
-import { RegisterFormComponent } from '../../components/register-form';
+import { RegisterFormComponent } from '../../components/register-form/register-form.component';
 
 @Component({
-  selector: 'app-register-page',
+  selector: 'dehe-register-page',
   standalone: true,
   imports: [
     MatCardModule,

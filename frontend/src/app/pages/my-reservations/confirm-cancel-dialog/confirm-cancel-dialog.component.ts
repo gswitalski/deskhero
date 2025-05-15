@@ -4,7 +4,7 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: 'app-confirm-cancel-dialog',
+  selector: 'dehe-confirm-cancel-dialog',
   standalone: true,
   imports: [
     CommonModule,

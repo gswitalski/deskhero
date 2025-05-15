@@ -4,15 +4,15 @@ import { NavBarComponent } from './shared/components/nav-bar/nav-bar.component';
 import { AuthService } from './core/services/auth.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'dehe-root',
   standalone: true,
   imports: [RouterOutlet, NavBarComponent],
   template: `
-    <app-nav-bar
+    <dehe-nav-bar
       [isLoggedIn]="authService.isLoggedIn()"
       [userName]="authService.user()?.name"
       (logout)="onLogout()">
-    </app-nav-bar>
+    </dehe-nav-bar>
     <main>
       <router-outlet></router-outlet>
     </main>

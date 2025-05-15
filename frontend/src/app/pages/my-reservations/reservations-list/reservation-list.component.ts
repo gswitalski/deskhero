@@ -9,7 +9,7 @@ import { ReservationItemComponent } from '../reservation-item/reservation-item.c
 import { Reservation } from '../../../shared/models/reservation.model';
 
 @Component({
-  selector: 'app-reservation-list',
+  selector: 'dehe-reservation-list',
   standalone: true,
   imports: [
     CommonModule,
@@ -31,11 +31,11 @@ import { Reservation } from '../../../shared/models/reservation.model';
       } @else {
         <mat-list>
           @for (reservation of reservations; track reservation.reservationId) {
-            <app-reservation-item
+            <dehe-reservation-item
               [reservation]="reservation"
               [listType]="listType"
-              (cancel)="onCancelReservation($event)">
-            </app-reservation-item>
+              (cancelRequest)="onCancelReservation($event)">
+            </dehe-reservation-item>
             @if (!$last) {
               <mat-divider></mat-divider>
             }

@@ -1,23 +1,24 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { LoginRequest } from '../../shared/models/user.model';
-import { LoginFormComponent } from '../../components/login-form';
+import { LoginFormComponent } from '../../components/login-form/login-form.component';
 
 @Component({
-  selector: 'app-login-page',
+  selector: 'dehe-login-page',
   standalone: true,
   imports: [
     MatCardModule,
     MatSnackBarModule,
-    LoginFormComponent
+    LoginFormComponent,
+    RouterLink
   ],
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss']
 })
-export class LoginPageComponent {
+export class LoginPageComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
