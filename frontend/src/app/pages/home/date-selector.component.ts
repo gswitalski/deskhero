@@ -152,7 +152,7 @@ export class DateSelectorComponent implements OnInit {
   });
 
   /** Dni tygodnia */
-  weekDays: Signal<Array<{date: Date, dayName: string, dayDate: string}>> = computed(() => {
+  weekDays: Signal<{date: Date, dayName: string, dayDate: string}[]> = computed(() => {
     const startDate = new Date(this.weekStartDate());
     const days = [];
 

@@ -1,8 +1,8 @@
-import { Injectable, inject, signal, PLATFORM_ID, Inject } from '@angular/core';
+import { Injectable, inject, signal, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { catchError, finalize, map } from 'rxjs/operators';
-import { Observable, throwError, of } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { DeskDto, DeskRequestDto, DeleteDeskResponseDto } from '../../../shared/models/desk.model';
 import { isPlatformBrowser } from '@angular/common';
 
